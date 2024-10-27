@@ -65,7 +65,6 @@ from sklearn.neural_network import MLPClassifier
 
 from lightgbm import LGBMClassifier
 from xgboost import XGBClassifier
-from catboost import CatBoostClassifier
 
 from boruta import BorutaPy
 ```
@@ -853,9 +852,6 @@ pipelines = {
     ]),
     'XGBoost': Pipeline(steps=[
         ('classifier', XGBClassifier(random_state=12345))
-    ]),
-    'CatBoost': Pipeline(steps=[
-        ('classifier', CatBoostClassifier(random_state=12345, verbose=0))
     ])
 }
 ```
@@ -996,14 +992,6 @@ Desviación estándar: 0.0051
     - Conjunto de validación: Perfecto.
     - Conjunto de prueba: Los resultados no están completos, pero se espera un rendimiento competitivo, basado en los rendimientos previos de LightGBM en otros casos.
 
-- 5. CatBoost
-    - Validación cruzada: Puntuaciones entre 0.93 y 0.95, con una media de 0.9415. Sugiere que el modelo tiene un rendimiento muy consistente y estable.
-    - Conjunto de validación: El modelo predice perfectamente los 11 casos en el conjunto de validación, con 100% de precisión, recall y F1.
-    - Conjunto de prueba: 
-        - Clase 0 (no abandono): precisión de 0.93 y el recall es casi perfecto con 0.99, lo que significa que el modelo identifica con gran exactitud la mayoría de los clientes que no abandonan.
-        - Clase 1 (abandono): Precisión de 0.96, indica que el modelo identifica correctamente los casos de abandono, aunque el recall es menor, con 0.80. Significa que el modelo pierde algunos casos de abandono, pero cuando los identifica, lo hace con gran precisión.
-    -Bootstrap: con media de 0.9370, (muy cercana a los resultados de la validación cruzada), lo que refuerza la estabilidad del modelo.
-
 ## ENTRENAMIENTO DEL MODELO
 
 Entrenando los 3 mejores modelos obtenidos anteriormente: GradientBoosting, MLPClassifier y RandomForest. Ajustando hiperparámetros y observando desempeño en el conjunto, naturalmente, con lo obtenido de boruta.
@@ -1031,7 +1019,7 @@ RandomForest es el tercero, pero su menor rendimiento en la clase minoritaria ha
 Escoger el mejor modelo no sólo se basa en una métrica, sino en un balance entre varias características, como rendimiento, estabilidad, facilidad de ajuste, y sensibilidad al conjunto de datos.
 
     - 1. Estabilidad del Rendimiento
-            RandomForest muestra un rendimiento consistente en diferentes validaciones cruzadas con un promedio de 0.8848, que aunque no es el más alto, es bastante destacable. La media en bootstrapping también es sólida (0.8442), con una baja desviación estándar (0.0087), lo que indica que el modelo es estable. Cabe decir, además que, aunque MLPClassifier tiene un promedio de validación cruzada más alto (0.9007), su desviación estándar en bootstrapping es algo mayor, lo que podría sugerir más variabilidad. Sumado a eso, en algunos casos puede ser sensible al hiperparámetro de iteraciones, esto se nota debido a la advertencias de convergencia, lo cual puede indicar que es más inestable y costoso de optimizar. Razón por la cuál, me tomaré la libertad de observar el comportamiento para el modelo CatBoost tambien. Podríamos hacerlo con XGBoost también ya que tiene un gran rendimiento, pero al ser un poco más complejo de ajustar puede ser más susceptible a sobreajuste si los hiperparámetros no están ajustados adecuadamente.
+            RandomForest muestra un rendimiento consistente en diferentes validaciones cruzadas con un promedio de 0.8848, que aunque no es el más alto, es bastante destacable. La media en bootstrapping también es sólida (0.8442), con una baja desviación estándar (0.0087), lo que indica que el modelo es estable. Cabe decir, además que, aunque MLPClassifier tiene un promedio de validación cruzada más alto (0.9007), su desviación estándar en bootstrapping es algo mayor, lo que podría sugerir más variabilidad. Sumado a eso, en algunos casos puede ser sensible al hiperparámetro de iteraciones, esto se nota debido a la advertencias de convergencia, lo cual puede indicar que es más inestable y costoso de optimizar. Podríamos hacerlo con XGBoost también ya que tiene un gran rendimiento, pero al ser un poco más complejo de ajustar puede ser más susceptible a sobreajuste si los hiperparámetros no están ajustados adecuadamente.
 
     - 2. Interpretabilidad y Robustez
             RandomForest es más fácil de interpretar en términos de importancia de características y su estructura basada en árboles, convirtiendolo en una buena opción en caso de usar técnicas de interpretación de carácteristicas.
@@ -1292,74 +1280,21 @@ plt.legend(loc="lower right")
 plt.show()
 ```
 
-```{python}
-
-cb_model = CatBoostClassifier(silent=True)
-
-catboost_param_grid = {
-    'iterations': [100, 200],
-    'learning_rate': [0.01, 0.1],
-    'depth': [3, 5, 7],
-    'subsample': [0.8, 1.0]
-}
-
-catboost_grid_search = GridSearchCV(estimator=cb_model, param_grid=catboost_param_grid, cv=5, scoring='roc_auc', n_jobs=-1, verbose=1)
-
-catboost_grid_search.fit(feature_train_selected, target_train_balanced)
-
-print("Mejor modelo CatBoost:")
-print(catboost_grid_search.best_estimator_)
-
-print("Mejores hiperparámetros:")
-print(catboost_grid_search.best_params_)
-
-print("Mejor puntuación AUC-ROC:")
-print(catboost_grid_search.best_score_)
-
-best_catboost = catboost_grid_search.best_estimator_
-best_catboost.fit(feature_train_selected, target_train_balanced)
-
-y_pred = best_catboost.predict(feature_test_selected)
-y_pred_proba = best_catboost.predict_proba(feature_test_selected)[:, 1]
-
-print("Reporte de Clasificación:")
-print(classification_report(test_target, y_pred))
-
-print("Puntuación AUC-ROC:")
-print(roc_auc_score(test_target, y_pred_proba))
-
-fpr, tpr, _ = roc_curve(test_target, y_pred_proba)
-roc_auc = auc(fpr, tpr)
-
-plt.figure()
-plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
-plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.05])
-plt.xlabel('Falsos Positivos')
-plt.ylabel('Verdaderos Positivos')
-plt.title('Curva ROC')
-plt.legend(loc="lower right")
-plt.show()
-```
-
 Una pequeña comparación:
 - Rendimiento:
     - XGBOOST: 0.9667
-    - CatBoost: 0.9633
     - GradientBoosting: 0.9744
     - RandomForest: 0.8920
 
 - Eficiencia Computacional:
-    - CatBoost: 24 candidatos, 120 fits, conocido por ser muy eficiente, especialmente con datos categóricos, y puede ser más rápido que XGBoost.
-    - XGBoost: 48 candidatos, 240 fits, es un modelo muy potente, pero puede ser más lento que CatBoost debido a cómo maneja el ajuste de hiperparámetros y cálculos de gradientes.
+    - XGBoost: 48 candidatos, 240 fits, es un modelo muy potente, pero puede ser lento debido a cómo maneja el ajuste de hiperparámetros y cálculos de gradientes.
     - Random Forest: 144 candidatos, 720 fits, aunque es más sencillo de entrenar, el número de candidatos y fits fue significativamente mayor, implicando costo computacional más alto.
-    - Gradient Boosting: 24 candidatos, 120 fits. En costo computacional, parecido a CatBoost pero con resultados de AUC-ROC superiores.
+    - Gradient Boosting: 24 candidatos, 120 fits. 
 
 - Facilidad de Interpetación:
     - Random Forest es el más fácil de interpretar, pues es un conjunto de árboles de decisión, y su output es más comprensibles.
     - Gradient Boosting, aunque similar a RF, puede ser un poco más complejo debido a la secuencialidad del boosting.
-    - XGBoost y CatBoost son más difíciles de interpretar. Ambos utilizan técnicas avanzadas de boosting. Eso sí, CatBoost ofrece algunas ventajas en términos de interpretabilidad nativa para variables categóricas.
+    - XGBoost es más difícil de interpretar. Utiliza técnicas avanzadas de boosting.
 
 # CONCLUSIÓN
 
@@ -1367,7 +1302,6 @@ Una vez obtenido y analizado, tantos los datos iniciales como los resultados arr
 
 Es bueno remarcar la parte de la sugerencia sobre RandomForestClassifier. Me tomo la libertad de tal sugerencia, debido a que no se explicita el modelo a usar, por lo que, basandome en los análisis anteriores, de los 3 modelos seleccionados, se recomienda, primero que nada, emplear Bosques Aleatorios para realizar las respectivas predicciones sobre el abandono, luego, sería interesante considerar a GradienteBoost, pesé a la complejidad del mismo, este ha demostrado ser de los mejores, incluso más que RandomForest, pero debido a la compejidad del mismo, lo recomendaría como segunda opción. Todo esto, por supuesto dependerá al final de los recursos, el tiempo y las métricas que se quieran alcanzar.
 
-Por último, como tercerá recomendación, podría ser catboost, un modelo que demostró también ser bastante representativo en el entrenamiento y las predicciones; ya se vio que MLPClassifier es sensible a los ajustes en los hiperparámetros y, pesé a ser de los mejores modelos, para esta tarea de clasificación no recomendaría emplearla.
 Es correcto decir que, es posible ahondar un poco más en los datos para crear nuevas carásteristicas y reentrenar modelos para obervar si estos son más exactos o más óptimos respecto a las nuevas características que puedan agregarse a los datos mediante la ingeniería de estas.
 
 
@@ -1384,8 +1318,8 @@ Modelo a considerar:
 
     - RandomForestClassifier con AUC-ROC=0.89, superando lo solicitado. Eso sí, es propenso a confundir las clases, pero, la facilidad de manipulación del modelo permite jugar con los hiperparámetros del mismo, esto se puede observar ya que la mejor puntuación obtenida por parte del bosque aleatorio fue de 0.96, por lo que sería de interés tomarlo en consideración, pese al alto coste computacional.
 
-Como recomendaciones finales, observando la pequeña comparación realizado en los modelos excluidos, CatBoost sería una opción muy competitiva y deseable, pues posee un alto AUC-ROC, sin mencionar que es más rápido de entrenar. Es verdad que XGBoost posee un rendimiento ligeramente superior pero, en términos de computabilidad, puede ser más costos pesé a ofecer más flexibilidad en el ajuste fino del modelo.
+Como recomendaciones finales, es verdad que XGBoost posee un rendimiento ligeramente superior pero, en términos de computabilidad, puede ser más costos pesé a ofecer más flexibilidad en el ajuste fino del modelo.
 Ahora, puede que RandomForest halla cumplido con lo deseado por poco, pero el coste computacional que requiere para nuestra solución es de las más altas, caso contrario que pasa con GradientBoosting aunque este último es un poco menos interpretable.
 
-En fin, en términos de eficiencia computacional, CatBoost tiende a ser más rápido que XGBoost, especialmente en conjuntos de datos categóricos o grandes debido a su capacidad para manejar categorías sin necesidad de codificación explícita, pero como aquí se ha realizado, se ha obtenido un resultado bastante deseable y competitivo como para tomarlo en cuenta. Sin embargo, XGBoost ofrece una alta flexibilidad y personalización en ajustes de hiperparámetros, por lo que la elección en la implementación de tal o cual modelo dependerá de todas estás variables que se han mencionado.
+En fin, en términos de eficiencia computacional, XGBoost ofrece una alta flexibilidad y personalización en ajustes de hiperparámetros.
 
