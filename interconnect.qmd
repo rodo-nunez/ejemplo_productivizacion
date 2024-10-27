@@ -68,8 +68,6 @@ from xgboost import XGBClassifier
 from catboost import CatBoostClassifier
 
 from boruta import BorutaPy
-
-from IPython.display import display, HTML
 ```
 
 ```{python}
@@ -90,15 +88,11 @@ def data_info(df, nombre_df):
 
     print(f'Datos {nombre_df}:')
 
-    display(df.head())
-    #inserto espacio en blanco doble
-    display(HTML('<br><br>'))
+    df.head()
 
     print(f'Información de {nombre_df}:')
-    display(df.info())
+    df.info()
     
-    #Inserta línea horizontal que seprara secciones
-    display(HTML('<hr>'))
 ```
 
 ```{python}
@@ -1058,7 +1052,7 @@ En fin, aunque MLPClassifier y XGBoost tienen sus ventajas, RandomForest ofrece 
 ### GradientBoostClassifier
 
 ```{python}
-%time
+
 #GB_model
 gb_model = GradientBoostingClassifier()
 
@@ -1118,7 +1112,7 @@ Importante también considerar y controlar el número de árboles o n_estimators
 ### MLPClassifier
 
 ```{python}
-%time
+
 #MLP_model
 mlp_model = MLPClassifier(max_iter=1000)
 
@@ -1182,7 +1176,7 @@ Cambiar el tipo de solución también podría convenir para esto. A veces puede 
 ### RandomForestClassifier
 
 ```{python}
-%time
+
 #rf_model
 rf_model = RandomForestClassifier()
 
@@ -1247,7 +1241,7 @@ En el informe final se harán algunas recomendaciones más, se tratará de conde
 Como se comento, igual se mostrará y se pondran a prueba otros 3 modelos más que, pesé a no haber calificado como nuestro 3 modelos principales, trataremos igual de hecharle un vistazo para ver el comportamiento de estos.
 
 ```{python}
-%time
+
 xgb_model = XGBClassifier(use_label_encoder=False, eval_metric='logloss')
 
 xgb_param_grid = {
@@ -1299,7 +1293,7 @@ plt.show()
 ```
 
 ```{python}
-%time
+
 cb_model = CatBoostClassifier(silent=True)
 
 catboost_param_grid = {
