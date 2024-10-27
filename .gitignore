@@ -7,3 +7,5 @@
 *.csv
 *.xlxs
 .venv
+*_ipynb
+*.tmp
