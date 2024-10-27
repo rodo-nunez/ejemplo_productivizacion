@@ -3,44 +3,41 @@ title: INTRODUCCIÓN
 jupyter: python3
 ---
 
-
 Objetivo de Interconnect: Pronosticar su tasa de cancelación de clientes.
 
 Para cumplir con lo requerido iniciaremos con un análisis exploratorio de datos teniendo en cuenta algunos aspectos importantes que señala Interconnect.
 
-    1.- Comunicación por teléfono fijo. Se informa que ofrece la posibilidad de un servicio con conexión multilínea para el celular.
-    2.- Internet. Ofrece la posibilidad de configurar la red a través de una DSL o Fibra Óptica.
+```         
+1.- Comunicación por teléfono fijo. Se informa que ofrece la posibilidad de un servicio con conexión multilínea para el celular.
+2.- Internet. Ofrece la posibilidad de configurar la red a través de una DSL o Fibra Óptica.
+```
+
 Se han de señalar, pues serán aspectos importantes a tener en cuenta respecto al porqué el cliente podría cancelar el servicio de Interconnect, además de, naturalmente, conocer las estadísticas de abandono en nuestro análisis exploratorio de datos inicial respecto a tales características.
 
 A parte de lo anterior nos terminan por indicar que la característica objetivo (target) es la columna 'EndDate' con 'EndDate' = No. Por lo que se han de analizar los datos y construir el modelo que pronostique la tasa de cancelación con base en ello.
 
-    - La métrica principal: AUC-ROC.
+```         
+- La métrica principal: AUC-ROC.
 
-    - La métrica adicional: exactitud.
+- La métrica adicional: exactitud.
+```
 
 Donde se anhela un AUC-ROC ≥ 0.88
 
-
 Una vez conseguido lo anterior, Interconnect podrá ofrecer a los usuarios que planean irse, códigos promocionales, descuentos y opciones de planes especiales en los cuales resulte, en términos económicos, beneficioso para la empresa.
-
 
 ## ANÁLISIS EXPLORATORIO DE DATOS
 
-Se tiene:
-- `contract.csv` — información del contrato.
-- `personal.csv` — datos personales del cliente.
-- `internet.csv` — información sobre los servicios de Internet.
-- `phone.csv` — información sobre los servicios telefónicos.
+Se tiene: - `contract.csv` — información del contrato. - `personal.csv` — datos personales del cliente. - `internet.csv` — información sobre los servicios de Internet. - `phone.csv` — información sobre los servicios telefónicos.
 
 Para cada archivo, la columna 'customerID' contiene un código único que se le asigna a cada cliente.
 
-
 Algunos otros servicios que ofrece la empresa incluyen:
 
-- Seguridad en Internet: software antivirus (*ProtecciónDeDispositivo*) y un bloqueador de sitios web maliciosos (*SeguridadEnLínea*).
-- Una línea de soporte técnico (*SoporteTécnico*).
-- Almacenamiento de archivos en la nube y backup de datos (*BackupOnline*).
-- Streaming de TV (*StreamingTV*) y directorio de películas (*StreamingPelículas*)
+-   Seguridad en Internet: software antivirus (*ProtecciónDeDispositivo*) y un bloqueador de sitios web maliciosos (*SeguridadEnLínea*).
+-   Una línea de soporte técnico (*SoporteTécnico*).
+-   Almacenamiento de archivos en la nube y backup de datos (*BackupOnline*).
+-   Streaming de TV (*StreamingTV*) y directorio de películas (*StreamingPelículas*)
 
 ```{python}
 #INTERCONNECT_PROJECT
@@ -169,8 +166,7 @@ unique_values(df_phone, 'df_phone')
 values_freq(df_phone, 'df_phone')
 ```
 
-De lo anterior se puede observar que el DataFrame df_contract posee valores ausentes implicitos, esto es, valores ausentes que no figuran como NaN en nuestro conjunto de datos si no que los mismos están siendo representados de otra manera. En nuestro DataFrame df_contract, tal conjunto de datos posee tales valores en la columna 'TotalCharges' pero representados como espacios o strings en blanco. 
-Nuestro conteo de valores de string en blanco arrojó 11. Por lo minúsculo del conjunto que representa respecto al total podrían eliminarse tales valores, pero antes de realizar tal paso, primero se intentará asegurar de que los mismos verdaderaente no serán necesarios para el presente proyecto.
+De lo anterior se puede observar que el DataFrame df_contract posee valores ausentes implicitos, esto es, valores ausentes que no figuran como NaN en nuestro conjunto de datos si no que los mismos están siendo representados de otra manera. En nuestro DataFrame df_contract, tal conjunto de datos posee tales valores en la columna 'TotalCharges' pero representados como espacios o strings en blanco. Nuestro conteo de valores de string en blanco arrojó 11. Por lo minúsculo del conjunto que representa respecto al total podrían eliminarse tales valores, pero antes de realizar tal paso, primero se intentará asegurar de que los mismos verdaderaente no serán necesarios para el presente proyecto.
 
 Además, se creará una función donde sustituya los valores en blanco que puedan existir en los datos con NaN, esto con la intención de asegurarse de que pueda existir el mismo inconveniente en los otros conjuntos de datos.
 
@@ -196,7 +192,6 @@ print(df_contract[df_contract['TotalCharges'].isna()])
 ```
 
 Tenemos que los últimos clientes comenzaron el servicio el 1ero de febrero del 2020 (fecha máxima existente en el DF y fechas de contratos válidas), a su vez, el útlimo contrato caducado para un cliente fue en el mismo año, con la diferencia de que la fecha fin del contrato fue el 1ero de Enero de 2020.
-
 
 Una vez observado los datos faltantes en la columna TotalCharges, se procederá a rellenar estos mismos de la mejor manera posible para lograr en este punto una imputación adecuada, y así, tal como indica Interconnect, ceñirnos a los lineamientos propuestos por estos: contrato válido a partir del primero de febrero, por lo que, como se vio en los resultados arrojados anteriormente, se ha decidido conservar tales datos ya que estos mismos hacen parte de lo solicitado por Interconnect para armar nuestro conjunto de validación más adelante.
 
@@ -243,8 +238,7 @@ print(df_contract['BeginDate'].max())
 
 #### df_contract
 
-Como la columna BeginDate siempre empieza desde el primero de cualquier mes se tratará de tal manera. Lo mismo pasará con columna EndDate.
-Se convertiran 'BeginDate' y 'EndDate' a formato adecuado.
+Como la columna BeginDate siempre empieza desde el primero de cualquier mes se tratará de tal manera. Lo mismo pasará con columna EndDate. Se convertiran 'BeginDate' y 'EndDate' a formato adecuado.
 
 ```{python}
 #df_contract
@@ -453,20 +447,21 @@ La diferencia entre clientes de distintos generos que contratan el servicio de I
 
 Al igual que para el tipo de contrato, analizar el abandono por el servicio de internet es más complicado, pues aún pudo ser la combinación de tener un servicio en conjunto con otro que pudo haber hecho cancelar el contrato con interconnect, pese a ello, es difícil ignorar el hecho de que la tendencia al abandono por parte de quienes poseen un contrato Month-to-month respecto a los cargos totales que puedan tener estos; inclusive el tipo de contrato que haya adquirido el cliente con Interconnect, como vimos, es una variable a tener en cuenta en el análisis exploratorio inicial de los datos y en la consecuente construcción de nuestro modelo, por lo que deberá tomarse tal cuestión en cuenta al momento de crear las ingenierías de características, naturalmente, pues se debe analizar la tendencia al abandono por tal tipo de contrato. Podría considerarse que los cargos totales respecto a los cargos mensuales, o la suma de los mensuales al final del uso de servicio pasado cierta cantidad de tiempo, ser ligeramente mayor de lo que debería ser.
 
-
 Se debería tomar en cuenta el abandono/no abandono respecto a los clientes que poseen sólo internet, sólo teléfono o ambos más la combinación del tipo de internet o de si posee o no multiples líneas. Basicamente:
 
-    - Quienes poseen solamente internet, de donde se evalúa, además, respecto al tipo de internet
+```         
+- Quienes poseen solamente internet, de donde se evalúa, además, respecto al tipo de internet
 
-    - Los que poseen solamente línea teléfonica, evaluado respecto a los que poseen multilíneas o una sola línea.
+- Los que poseen solamente línea teléfonica, evaluado respecto a los que poseen multilíneas o una sola línea.
 
-    - Los que poseen ambos:
-        - Internet DSL con una línea
-        - Internet DSL con multilíneas
-        - Fibra óptica con una línea
-        - fibra óptica con multilíneas
+- Los que poseen ambos:
+    - Internet DSL con una línea
+    - Internet DSL con multilíneas
+    - Fibra óptica con una línea
+    - fibra óptica con multilíneas
+```
 
- Esto, nuevamente podría ayudar a construir algunas ingeniería de carácteristicas que ayuden al modelo a ser más robusto en sus predicciones.
+Esto, nuevamente podría ayudar a construir algunas ingeniería de carácteristicas que ayuden al modelo a ser más robusto en sus predicciones.
 
 ```{python}
 data['internet_multilines'] = np.where(~data['internet_service'].isna() & ~data['multiple_lines'].isna(), ' Ambos', 
@@ -488,21 +483,18 @@ col_stats = ['monthly_charges', 'total_charges', 'target', 'senior_citizen']
 print(data[col_stats].corr())
 ```
 
-- monthly_charges y total_charges:
-    - Con correlación positiva moderada de 0.651 entre monthly_charges y total_charges, se puuede deducir que tiene sentido, pues los cargos totalesdeben acumularse en función de los mensuales.
+-   monthly_charges y total_charges:
+    -   Con correlación positiva moderada de 0.651 entre monthly_charges y total_charges, se puuede deducir que tiene sentido, pues los cargos totalesdeben acumularse en función de los mensuales.
 
-    - Correlación positiva débil entre los cargos mensuales y el target. Sugiere que los cargos mensuales más altos podrían estar débilmente asociados con un aumento en la probabilidad de cancelación.
+    -   Correlación positiva débil entre los cargos mensuales y el target. Sugiere que los cargos mensuales más altos podrían estar débilmente asociados con un aumento en la probabilidad de cancelación.
 
 -total_charges y target:
 
-    - Con -0.199 la correlación negativa débil entre los cargos totales y el target, podría indicar que a medida que los clientes acumulan más cargos totales, hay una ligera tendencia a que el target disminuya.
+```         
+- Con -0.199 la correlación negativa débil entre los cargos totales y el target, podría indicar que a medida que los clientes acumulan más cargos totales, hay una ligera tendencia a que el target disminuya.
+```
 
-
-monthly_charges: 0.220 (débil positiva).
-total_charges: 0.102 (muy débil positiva).
-target: 0.151 (débil positiva).
-Sugiere que los ciudadanos mayores (senior_citizen) tienden a tener un leve aumento en los cargos mensuales y totales, y también hay una débil asociación con el target.
-
+monthly_charges: 0.220 (débil positiva). total_charges: 0.102 (muy débil positiva). target: 0.151 (débil positiva). Sugiere que los ciudadanos mayores (senior_citizen) tienden a tener un leve aumento en los cargos mensuales y totales, y también hay una débil asociación con el target.
 
 Estadísticas descriptivas:
 
@@ -568,8 +560,7 @@ for col in col_nan_values:
 print(data.isna().sum())
 ```
 
-Se había comentado que se debía tener en cuenta aquellos que poseín una sola línea, varias o ninguna, en combinación de si posee o no internet junto, a su vez, con el tipo del mismo. Entonces, se procederá a crear una columna que contenga información o que nos permita discernir mejor de la misma.
-Así que se creará una columna binaria que posea valores que representen a los que tienen al menos una línea versus los que no.
+Se había comentado que se debía tener en cuenta aquellos que poseín una sola línea, varias o ninguna, en combinación de si posee o no internet junto, a su vez, con el tipo del mismo. Entonces, se procederá a crear una columna que contenga información o que nos permita discernir mejor de la misma. Así que se creará una columna binaria que posea valores que representen a los que tienen al menos una línea versus los que no.
 
 ```{python}
 #Verificar columna 'multiple_lines' si es categórica
@@ -592,9 +583,7 @@ data['atleast_one_line'] = data['atleast_one_line'].astype('int')
 print(data.nunique())
 ```
 
-Se rellena con -1, significando así que no aplica (aquellos que no quisieron el servicio o aún no lo han adquirido). Se hace respecto a los servicios más importantes que ofrece Interconnect.
-Rellenamos con -1 porque:
-0 indica al menos una línea o una sola línea simplemente, 1 significa varias lineas, -1 será ninguna linea.
+Se rellena con -1, significando así que no aplica (aquellos que no quisieron el servicio o aún no lo han adquirido). Se hace respecto a los servicios más importantes que ofrece Interconnect. Rellenamos con -1 porque: 0 indica al menos una línea o una sola línea simplemente, 1 significa varias lineas, -1 será ninguna linea.
 
 En internet service: 0 DSL, 1 fibra óptica y -1 ninguna de los dos
 
@@ -731,8 +720,7 @@ Boruta es un metodos de selección de características que permitirán identific
 
 #### Boruta
 
-Selecciona y a su vez reduce las características.
-Algoritmo envolvente que trabaja sobre modelo de bosque aleatorio el cual usa para identificar tales características. La idea es que Boruta examine las características en el conjunto de entrenamiento, sin influir en el conjunto de validación.
+Selecciona y a su vez reduce las características. Algoritmo envolvente que trabaja sobre modelo de bosque aleatorio el cual usa para identificar tales características. La idea es que Boruta examine las características en el conjunto de entrenamiento, sin influir en el conjunto de validación.
 
 Se entrena el modelo con las características seleccionadas y observammos su rendimiento y las métricas demandadas por Interconnect.
 
@@ -782,8 +770,7 @@ print(f"Puntuaciones de validación cruzada: {cv_scores}")
 print(f"Promedio de las puntuaciones: {cv_scores.mean()}")
 ```
 
-La puntuación anterior indica que el modelo posee un rendimiento decente dada distintas particiones.
-Basicamente, esto sugiere que las características seleccionadas por Boruta son, en promedio, 81.74% efectivas para predecir la variable objetivo.
+La puntuación anterior indica que el modelo posee un rendimiento decente dada distintas particiones. Basicamente, esto sugiere que las características seleccionadas por Boruta son, en promedio, 81.74% efectivas para predecir la variable objetivo.
 
 Se observa, además, que las puntuaciones de validación cruzada varían de 0.8063 a 0.8229, indicando así que el modelo es bastante estable y no depende excesivamente de una sola partición de los datos.
 
@@ -819,7 +806,7 @@ print(f"correlación feature_train_selected: {feature_train_selected.corr()}")
 
 Notese la relación existente entre monthly_charges y total_charge, como ya se comentó, lógica. También se observa una correlación alta en interner de fibra óptica, significando que este tipo de clientes suele tener cargos más altos, al igual que los de servicios streaming; obviamente, tener múltiples líneas telefónicas también se asocia a caergos mensuales más altos.
 
-Si dirigimos la vista a total_charges con respecto a duration__months y duration_days, se observa una correlación alta, pues obvio, los mismos aumentan con la duración del contrato; con partner_Yes pasa algo parecido,a l igual que con contract_type_Two_year. Si el cliente posee protección en dispositivo, respaldo online y soporte técnico, esto tambien se verá reflejados o asociado a los cargos totales más altos.
+Si dirigimos la vista a total_charges con respecto a duration\_\_months y duration_days, se observa una correlación alta, pues obvio, los mismos aumentan con la duración del contrato; con partner_Yes pasa algo parecido,a l igual que con contract_type_Two_year. Si el cliente posee protección en dispositivo, respaldo online y soporte técnico, esto tambien se verá reflejados o asociado a los cargos totales más altos.
 
 Los clientes cuyo tipo de contrato es de dos años tiende a usar pagos automáticos.
 
@@ -856,8 +843,7 @@ pipelines = {
 }
 ```
 
-Se emplea un bucle que observé la validación cruzada en conjunto de validación y prueba, además de, por supuesto, un bootstrapping debido a los pocos valores en conjunto de validación. Se realizará con la intención de que no exista sesgo hacia una clase mayoritaria.
-Dado que el conjunto de prueba tiene un tamaño razonable y el conjunto de validación es demasiado pequeño, es correcto hacer bootstrapping en el conjunto de prueba para evaluar la estabilidad del modelo, tomar feature_valid_selected para bootstrapping podría llevar a resultados poco confiables debido a su pequeño tamaño.
+Se emplea un bucle que observé la validación cruzada en conjunto de validación y prueba, además de, por supuesto, un bootstrapping debido a los pocos valores en conjunto de validación. Se realizará con la intención de que no exista sesgo hacia una clase mayoritaria. Dado que el conjunto de prueba tiene un tamaño razonable y el conjunto de validación es demasiado pequeño, es correcto hacer bootstrapping en el conjunto de prueba para evaluar la estabilidad del modelo, tomar feature_valid_selected para bootstrapping podría llevar a resultados poco confiables debido a su pequeño tamaño.
 
 ```{python}
 for name, pipeline in pipelines.items():
@@ -898,142 +884,125 @@ los resultados del bootstrapping proporcionan una estimación de la variabilidad
 
 Dado que la validación cruzada ya ha demostrado un rendimiento robusto, el valor añadido del bootstrapping es confirmar la estabilidad del modelo en el conjunto de prueba.
 
-De los que cumplen con AUC-ROC >= 0.88 son:
+De los que cumplen con AUC-ROC \>= 0.88 son:
 
+1.  RandomForestClassifier
 
-1. RandomForestClassifier
-
-Puntuaciones de Validación Cruzada:
-Media: 0.8848
+Puntuaciones de Validación Cruzada: Media: 0.8848
 
 Reporte de Clasificación:
 
 Conjunto de Prueba:
 
-Precisión: 0.88 (Clase 0), 0.73 (Clase 1)
-Recall: 0.91 (Clase 0), 0.67 (Clase 1)
-F1-score: 0.90 (Clase 0), 0.70 (Clase 1)
-Exactitud: 0.85
-Bootstrap:
-Media: 0.8438
-Desviación estándar: 0.0084
+Precisión: 0.88 (Clase 0), 0.73 (Clase 1) Recall: 0.91 (Clase 0), 0.67 (Clase 1) F1-score: 0.90 (Clase 0), 0.70 (Clase 1) Exactitud: 0.85 Bootstrap: Media: 0.8438 Desviación estándar: 0.0084
 
-2. MLPClassifier
+2.  MLPClassifier
 
-Puntuaciones de Validación Cruzada:
-Media: 0.9007
+Puntuaciones de Validación Cruzada: Media: 0.9007
 
 Reporte de Clasificación:
 
 Conjunto de Prueba:
 
-Precisión: 0.94 (Clase 0), 0.76 (Clase 1)
-Recall: 0.90 (Clase 0), 0.83 (Clase 1)
-F1-score: 0.92 (Clase 0), 0.79 (Clase 1)
-Exactitud: 0.88
-Bootstrap:
-Media: 0.8835
-Desviación estándar: 0.0076
+Precisión: 0.94 (Clase 0), 0.76 (Clase 1) Recall: 0.90 (Clase 0), 0.83 (Clase 1) F1-score: 0.92 (Clase 0), 0.79 (Clase 1) Exactitud: 0.88 Bootstrap: Media: 0.8835 Desviación estándar: 0.0076
 
-3. GradientBoosting
+3.  GradientBoosting
 
-Puntuaciones de Validación Cruzada:
-Media: 0.8919
+Puntuaciones de Validación Cruzada: Media: 0.8919
 
 Reporte de Clasificación:
 
 Conjunto de Prueba:
 
-Precisión: 0.91 (Clase 0), 0.74 (Clase 1)
-Recall: 0.90 (Clase 0), 0.75 (Clase 1)
-F1-score: 0.91 (Clase 0), 0.74 (Clase 1)
-Exactitud: 0.86
-Bootstrap:
-Media: 0.8611
-Desviación estándar: 0.0080
+Precisión: 0.91 (Clase 0), 0.74 (Clase 1) Recall: 0.90 (Clase 0), 0.75 (Clase 1) F1-score: 0.91 (Clase 0), 0.74 (Clase 1) Exactitud: 0.86 Bootstrap: Media: 0.8611 Desviación estándar: 0.0080
 
-4. LGBMClassifier
+4.  LGBMClassifier
 
-Puntuaciones de Validación Cruzada:
-Media: 0.9628
+Puntuaciones de Validación Cruzada: Media: 0.9628
 
-Reporte de Clasificación:
-Conjunto de Prueba:
+Reporte de Clasificación: Conjunto de Prueba:
 
-Precisión: 0.95 (Clase 0), 0.98 (Clase 1)
-Recall: 0.99 (Clase 0), 0.85 (Clase 1)
-F1-score: 0.97 (Clase 0), 0.91 (Clase 1)
-Exactitud: 0.95
-Bootstrap:
-Media: 0.9534
-Desviación estándar: 0.0051
+Precisión: 0.95 (Clase 0), 0.98 (Clase 1) Recall: 0.99 (Clase 0), 0.85 (Clase 1) F1-score: 0.97 (Clase 0), 0.91 (Clase 1) Exactitud: 0.95 Bootstrap: Media: 0.9534 Desviación estándar: 0.0051
 
-- 1. RandomForestClassifier
+-   
 
-    - Validación cruzada: Puntuaciones consistentes alrededor de 0.88, con una media de 0.8838, lo que indica un modelo estable.
-    - Conjunto de validación: El modelo predice perfectamente los 11 casos en el conjunto de validación (100% precisión, recall y F1)
-    - Conjunto de prueba: Precisión de 0.88 para la clase 0 (no abandono) y 0.73 para la clase 1 (abandono).
-    - Bootstrap: Media de 0.845 y desviación estándar baja.
+    1.  RandomForestClassifier
 
-- 2. MLPClassifier
-    - Validación cruzada: Alta media de 0.8960, la mejor hasta ahora.
-    - Conjunto de validación: Resultados perfectos.
-    - Conjunto de prueba: 0.92 de precisión para la clase 0 y 0.83 para la clase 1, con un recall de 0.77. La exactitud general es de 0.90, lo que lo convierte en uno de los mejores modelos.
-    - Bootstrap: Media de 0.897, con baja desviación estándar, lo que confirma su estabilidad.
+    -   Validación cruzada: Puntuaciones consistentes alrededor de 0.88, con una media de 0.8838, lo que indica un modelo estable.
+    -   Conjunto de validación: El modelo predice perfectamente los 11 casos en el conjunto de validación (100% precisión, recall y F1)
+    -   Conjunto de prueba: Precisión de 0.88 para la clase 0 (no abandono) y 0.73 para la clase 1 (abandono).
+    -   Bootstrap: Media de 0.845 y desviación estándar baja.
 
-- 3. GradientBoosting
-    - Validación cruzada: Media de 0.8923.
-    - Conjunto de validación: Perfecto.
-    - Conjunto de prueba: Precisión de 0.91 para la clase 0 y 0.76 para la clase 1, lo que es razonable, pero su recall para la clase 1 es de solo 0.75.
-    - Bootstrap: Media de 0.8709, con desviación estándar baja.
+-   
 
-- 4. LGBMClassifier
-    - Validación cruzada: Puntuaciones no se muestran, pero se espera una estabilidad cercana a 0.89-0.90.
-    - Conjunto de validación: Perfecto.
-    - Conjunto de prueba: Los resultados no están completos, pero se espera un rendimiento competitivo, basado en los rendimientos previos de LightGBM en otros casos.
+    2.  MLPClassifier
+
+    -   Validación cruzada: Alta media de 0.8960, la mejor hasta ahora.
+    -   Conjunto de validación: Resultados perfectos.
+    -   Conjunto de prueba: 0.92 de precisión para la clase 0 y 0.83 para la clase 1, con un recall de 0.77. La exactitud general es de 0.90, lo que lo convierte en uno de los mejores modelos.
+    -   Bootstrap: Media de 0.897, con baja desviación estándar, lo que confirma su estabilidad.
+
+-   
+
+    3.  GradientBoosting
+
+    -   Validación cruzada: Media de 0.8923.
+    -   Conjunto de validación: Perfecto.
+    -   Conjunto de prueba: Precisión de 0.91 para la clase 0 y 0.76 para la clase 1, lo que es razonable, pero su recall para la clase 1 es de solo 0.75.
+    -   Bootstrap: Media de 0.8709, con desviación estándar baja.
+
+-   
+
+    4.  LGBMClassifier
+
+    -   Validación cruzada: Puntuaciones no se muestran, pero se espera una estabilidad cercana a 0.89-0.90.
+    -   Conjunto de validación: Perfecto.
+    -   Conjunto de prueba: Los resultados no están completos, pero se espera un rendimiento competitivo, basado en los rendimientos previos de LightGBM en otros casos.
 
 ## ENTRENAMIENTO DEL MODELO
 
 Entrenando los 3 mejores modelos obtenidos anteriormente: GradientBoosting, MLPClassifier y RandomForest. Ajustando hiperparámetros y observando desempeño en el conjunto, naturalmente, con lo obtenido de boruta.
 
-- 1. MLPClassifier (Red Neuronal de scikit-learn), red neuronal donde fluye la información en una única dirección. Se entrena usando etiquetas conocidas. Su puntuación de validación cruzada: 0.9007 (promedio), lo que indica un excelente rendimiento en el conjunto de validación. La precisión en conjunto de prueba: 0.88 (general) y una f1-score para la clase minoritaria (1) de 0.79, lo que sugiere que este modelo maneja bien tanto la clase mayoritaria como la minoritaria.
-Desviación estándar del bootstrap: 0.0076, indica estabilidad en predicciones.
+-   
+
+    1.  MLPClassifier (Red Neuronal de scikit-learn), red neuronal donde fluye la información en una única dirección. Se entrena usando etiquetas conocidas. Su puntuación de validación cruzada: 0.9007 (promedio), lo que indica un excelente rendimiento en el conjunto de validación. La precisión en conjunto de prueba: 0.88 (general) y una f1-score para la clase minoritaria (1) de 0.79, lo que sugiere que este modelo maneja bien tanto la clase mayoritaria como la minoritaria. Desviación estándar del bootstrap: 0.0076, indica estabilidad en predicciones.
 
     MLPClassifier tiene un equilibrio entre la capacidad de generalización y un buen rendimiento en el conjunto de prueba.
 
+-   
 
-- 2. GradientBoosting, puntuación de validación cruzada: 0.8919 (promedio), lo que también demuestra un rendimiento estable en validación cruzada.
-Precisión en conjunto de prueba: 0.86 (general). La desviación estándar del bootstrap: 0.0080, lo que muestra que el modelo es bastante consistente.
+    2.  GradientBoosting, puntuación de validación cruzada: 0.8919 (promedio), lo que también demuestra un rendimiento estable en validación cruzada. Precisión en conjunto de prueba: 0.86 (general). La desviación estándar del bootstrap: 0.0080, lo que muestra que el modelo es bastante consistente.
 
     GradientBoosting ofrece una buena mezcla entre precisión y recall, con una f1-score de 0.74 para la clase minoritaria. Aunque su precisión global es más baja que la de MLPClassifier, sigue siendo buen candidato.
 
-- 3. RandomForest, puntuación de validación cruzada: 0.8848 (promedio), sólida pero ligeramente inferior a los otros dos modelos anteriores. Su precisión en conjunto de prueba: 0.84 (general) y una f1-score para la clase minoritaria (1) de 0.69, lo cual es aceptable, pero ligeramente. Desviación estándar del bootstrap: 0.0087, muestra buena estabilidad en sus predicciones. 
-    
+-   
+
+    3.  RandomForest, puntuación de validación cruzada: 0.8848 (promedio), sólida pero ligeramente inferior a los otros dos modelos anteriores. Su precisión en conjunto de prueba: 0.84 (general) y una f1-score para la clase minoritaria (1) de 0.69, lo cual es aceptable, pero ligeramente. Desviación estándar del bootstrap: 0.0087, muestra buena estabilidad en sus predicciones.
+
     Aunque RandomForest tiene una puntuación de validación cruzada sólida y una precisión razonable en el conjunto de prueba, su rendimiento en la clase minoritaria (1) es menor comparado con MLPClassifier y GradientBoosting.
 
-Entonces, con lo anterior pongamos nuestros planes en sintésis. Ya se sabe entonces que MLPClassifier parece ser el mejor modelo en términos generales debido a su fuerte rendimiento en la clase minoritaria y estabilidad en las predicciones.
-GradientBoosting es también una opción muy sólida, con buenos resultados en general y buena estabilidad.
-RandomForest es el tercero, pero su menor rendimiento en la clase minoritaria hace que sea un poco menos favorable en comparación con los dos anteriores.
+Entonces, con lo anterior pongamos nuestros planes en sintésis. Ya se sabe entonces que MLPClassifier parece ser el mejor modelo en términos generales debido a su fuerte rendimiento en la clase minoritaria y estabilidad en las predicciones. GradientBoosting es también una opción muy sólida, con buenos resultados en general y buena estabilidad. RandomForest es el tercero, pero su menor rendimiento en la clase minoritaria hace que sea un poco menos favorable en comparación con los dos anteriores.
 
-¿Por qué preferír en nuestro caso, al incluirlo entre los 3 mejores, RandomForest por sobre otros modelos? 
-Escoger el mejor modelo no sólo se basa en una métrica, sino en un balance entre varias características, como rendimiento, estabilidad, facilidad de ajuste, y sensibilidad al conjunto de datos.
+¿Por qué preferír en nuestro caso, al incluirlo entre los 3 mejores, RandomForest por sobre otros modelos? Escoger el mejor modelo no sólo se basa en una métrica, sino en un balance entre varias características, como rendimiento, estabilidad, facilidad de ajuste, y sensibilidad al conjunto de datos.
 
-    - 1. Estabilidad del Rendimiento
-            RandomForest muestra un rendimiento consistente en diferentes validaciones cruzadas con un promedio de 0.8848, que aunque no es el más alto, es bastante destacable. La media en bootstrapping también es sólida (0.8442), con una baja desviación estándar (0.0087), lo que indica que el modelo es estable. Cabe decir, además que, aunque MLPClassifier tiene un promedio de validación cruzada más alto (0.9007), su desviación estándar en bootstrapping es algo mayor, lo que podría sugerir más variabilidad. Sumado a eso, en algunos casos puede ser sensible al hiperparámetro de iteraciones, esto se nota debido a la advertencias de convergencia, lo cual puede indicar que es más inestable y costoso de optimizar. Podríamos hacerlo con XGBoost también ya que tiene un gran rendimiento, pero al ser un poco más complejo de ajustar puede ser más susceptible a sobreajuste si los hiperparámetros no están ajustados adecuadamente.
+```         
+- 1. Estabilidad del Rendimiento
+        RandomForest muestra un rendimiento consistente en diferentes validaciones cruzadas con un promedio de 0.8848, que aunque no es el más alto, es bastante destacable. La media en bootstrapping también es sólida (0.8442), con una baja desviación estándar (0.0087), lo que indica que el modelo es estable. Cabe decir, además que, aunque MLPClassifier tiene un promedio de validación cruzada más alto (0.9007), su desviación estándar en bootstrapping es algo mayor, lo que podría sugerir más variabilidad. Sumado a eso, en algunos casos puede ser sensible al hiperparámetro de iteraciones, esto se nota debido a la advertencias de convergencia, lo cual puede indicar que es más inestable y costoso de optimizar. Podríamos hacerlo con XGBoost también ya que tiene un gran rendimiento, pero al ser un poco más complejo de ajustar puede ser más susceptible a sobreajuste si los hiperparámetros no están ajustados adecuadamente.
 
-    - 2. Interpretabilidad y Robustez
-            RandomForest es más fácil de interpretar en términos de importancia de características y su estructura basada en árboles, convirtiendolo en una buena opción en caso de usar técnicas de interpretación de carácteristicas.
-            
-    - 3. Manejo del Desbalance de Clases
-            Aunque XGBoost y otros modelos manejan bien los desequilibrios, RandomForest puede ser más eficaz para este tipo de problemas, ya que realiza un muestreo de datos con reposición en cada árbol, lo que contribuye a mitigar problemas de clase minoritaria. Los resultados en recall para la clase 1 son competitivos: 
-            
-            0.72 en RandomForest, frente a 0.74 en GradientBoosting y 0.76 en MLP. No existe demasiada diferencia.
+- 2. Interpretabilidad y Robustez
+        RandomForest es más fácil de interpretar en términos de importancia de características y su estructura basada en árboles, convirtiendolo en una buena opción en caso de usar técnicas de interpretación de carácteristicas.
+        
+- 3. Manejo del Desbalance de Clases
+        Aunque XGBoost y otros modelos manejan bien los desequilibrios, RandomForest puede ser más eficaz para este tipo de problemas, ya que realiza un muestreo de datos con reposición en cada árbol, lo que contribuye a mitigar problemas de clase minoritaria. Los resultados en recall para la clase 1 son competitivos: 
+        
+        0.72 en RandomForest, frente a 0.74 en GradientBoosting y 0.76 en MLP. No existe demasiada diferencia.
 
-    - 4. Facilidad de Implementación y Optimización
-            RandomForest es fácil de implementar y ajustar. Requiere menos ajuste de hiperparámetros que XGBoost o MLPClassifier. Algunos  modelos como XGBoost son más potente y a su vez más complejos, lo que requiere un mayor esfuerzo en ajuste de hiperparámetros y, al igual que LightGBM, estes modelo puede llevar más tiempo y recursos, algo que debe considerarse.
-            
-    - 5. Precisión General y Recall
-            Aunque el modelo MLPClassifier tiene una precisión general más alta (0.88), RandomForest tiene un mejor equilibrio entre precisión y recall, siendo crítico para nosotros puesto que ambas clases son importantes.
+- 4. Facilidad de Implementación y Optimización
+        RandomForest es fácil de implementar y ajustar. Requiere menos ajuste de hiperparámetros que XGBoost o MLPClassifier. Algunos  modelos como XGBoost son más potente y a su vez más complejos, lo que requiere un mayor esfuerzo en ajuste de hiperparámetros y, al igual que LightGBM, estes modelo puede llevar más tiempo y recursos, algo que debe considerarse.
+        
+- 5. Precisión General y Recall
+        Aunque el modelo MLPClassifier tiene una precisión general más alta (0.88), RandomForest tiene un mejor equilibrio entre precisión y recall, siendo crítico para nosotros puesto que ambas clases son importantes.
+```
 
 En fin, aunque MLPClassifier y XGBoost tienen sus ventajas, RandomForest ofrece un rendimiento equilibrado, robusto y fácil de interpretar, con menos riesgo de inestabilidad, por lo que se le ha terminado considerando por encima de otros modelos, sobre todo porque, como se vio en la sección de boruta, pudo alcanzar el puntaje AUC-ROC deseado por Interconnect.
 
@@ -1091,7 +1060,7 @@ plt.legend(loc="lower right")
 plt.show()
 ```
 
-La curva  muestra un rendimiento bastante alto, con un AUC de 0.97, sugiriendo la eficacia en distinguir entre clases positivas y negativas. El modelo es capaz de lograr de manera eficiente la distinción entre clases aunque  la precisión para la clase minoritaria (1) es algo más baja en comparación con la clase mayoritaria (0), lo que puede ser una señal de que el modelo está aprendiendo demasiado bien las características del conjunto de entrenamiento, pero no generaliza tan bien en la clase más pequeña.
+La curva muestra un rendimiento bastante alto, con un AUC de 0.97, sugiriendo la eficacia en distinguir entre clases positivas y negativas. El modelo es capaz de lograr de manera eficiente la distinción entre clases aunque la precisión para la clase minoritaria (1) es algo más baja en comparación con la clase mayoritaria (0), lo que puede ser una señal de que el modelo está aprendiendo demasiado bien las características del conjunto de entrenamiento, pero no generaliza tan bien en la clase más pequeña.
 
 Algunas estrategias que podríamos implementar para mitigar el posible sobreajuste es realizar una regularización adicional controlando max_depth, min_samples_split y men_samples_leaf. Con esto podríamos conseguir prevenir que los árboles individuales se ajusten demasiado a los datos de entrenamiento.
 
@@ -1156,10 +1125,9 @@ Aquí se ha de tener cuidado con el modelo MLPClassifier, pues la información m
 
 No se recomienda desechar el modelo, se recomienda realizar los respectivos ajustes para lograr lo más óptimo y realista del mismo, de forma que también converja dentro de las iteraciones permitidas.
 
-NOTA: La advertencia puede significar que el modelo no ha  alcanzado su solución óptima.
+NOTA: La advertencia puede significar que el modelo no ha alcanzado su solución óptima.
 
-Una forma de abordar tal advertencia podría ser el incrementar el número de iteraciones (max_iter) para ver si es debido a que el mismo es demasiado bajo como para lograr una óptimización aceptable.
-Cambiar el tipo de solución también podría convenir para esto. A veces puede ser necesario usar 'lbfgs' en lugar de 'adam', pues es un optimizador basado en gradiente más robusto para ciertos escenarios. El ajuste de la tasa de aprendizaje también es un hiperparámetros a considerar variar, pues 'adaptive' pese a ser buena opción para modelos que no convergen bien con una tasa de aprendizaje constante. Se podría intentar probar con diferentes valores learning_rate_init, pudiendo ser desde 0.0001 a 0.01. Intervenir en la regularización (alpha) también podría plantearse para ver si eiste mejora en el rendimiento y la estabilidad, inclusive, se podría intentar usar otros tipos de activaciones para lograr un mejor modelo y evitar la advertencia.
+Una forma de abordar tal advertencia podría ser el incrementar el número de iteraciones (max_iter) para ver si es debido a que el mismo es demasiado bajo como para lograr una óptimización aceptable. Cambiar el tipo de solución también podría convenir para esto. A veces puede ser necesario usar 'lbfgs' en lugar de 'adam', pues es un optimizador basado en gradiente más robusto para ciertos escenarios. El ajuste de la tasa de aprendizaje también es un hiperparámetros a considerar variar, pues 'adaptive' pese a ser buena opción para modelos que no convergen bien con una tasa de aprendizaje constante. Se podría intentar probar con diferentes valores learning_rate_init, pudiendo ser desde 0.0001 a 0.01. Intervenir en la regularización (alpha) también podría plantearse para ver si eiste mejora en el rendimiento y la estabilidad, inclusive, se podría intentar usar otros tipos de activaciones para lograr un mejor modelo y evitar la advertencia.
 
 ### RandomForestClassifier
 
@@ -1218,7 +1186,7 @@ plt.show()
 
 Por último, tenemos el modelo de Bosque Aleatorio el cual ha presentado una puntuación de 0.89, cumpliendo también con lo exigido por Interconnect, aunque, eso sí, hay que tener en cuenta que es más propenso a confundir las clases si lo comparamos con GradientBoost. Además, se ha de tener en cuenta que este valor es posible mejorarlo si se hace un respectivo ajuste a los hiperparámetros correspondientes.
 
-Como se comento al inicio, es bastante bueno considerar usar el modelo de bosque aleatorio para la predicción en el abandono por parte del cliente para con Interconnect, este tiene una implementación y nivel de ajuste menos complejo de lo que requieren algunos otros modelos. 
+Como se comento al inicio, es bastante bueno considerar usar el modelo de bosque aleatorio para la predicción en el abandono por parte del cliente para con Interconnect, este tiene una implementación y nivel de ajuste menos complejo de lo que requieren algunos otros modelos.
 
 Sea cual fuere la decisión de Interconnect, se espera que en el presente proyecto se haya facilitado en una visión, lo más general posible, sobre el comportamiento futuro de los clientes teniendo en cuenta el conjunto de datos dados por estos.
 
@@ -1280,21 +1248,16 @@ plt.legend(loc="lower right")
 plt.show()
 ```
 
-Una pequeña comparación:
-- Rendimiento:
-    - XGBOOST: 0.9667
-    - GradientBoosting: 0.9744
-    - RandomForest: 0.8920
+Una pequeña comparación: - Rendimiento: - XGBOOST: 0.9667 - GradientBoosting: 0.9744 - RandomForest: 0.8920
 
-- Eficiencia Computacional:
-    - XGBoost: 48 candidatos, 240 fits, es un modelo muy potente, pero puede ser lento debido a cómo maneja el ajuste de hiperparámetros y cálculos de gradientes.
-    - Random Forest: 144 candidatos, 720 fits, aunque es más sencillo de entrenar, el número de candidatos y fits fue significativamente mayor, implicando costo computacional más alto.
-    - Gradient Boosting: 24 candidatos, 120 fits. 
-
-- Facilidad de Interpetación:
-    - Random Forest es el más fácil de interpretar, pues es un conjunto de árboles de decisión, y su output es más comprensibles.
-    - Gradient Boosting, aunque similar a RF, puede ser un poco más complejo debido a la secuencialidad del boosting.
-    - XGBoost es más difícil de interpretar. Utiliza técnicas avanzadas de boosting.
+-   Eficiencia Computacional:
+    -   XGBoost: 48 candidatos, 240 fits, es un modelo muy potente, pero puede ser lento debido a cómo maneja el ajuste de hiperparámetros y cálculos de gradientes.
+    -   Random Forest: 144 candidatos, 720 fits, aunque es más sencillo de entrenar, el número de candidatos y fits fue significativamente mayor, implicando costo computacional más alto.
+    -   Gradient Boosting: 24 candidatos, 120 fits.
+-   Facilidad de Interpetación:
+    -   Random Forest es el más fácil de interpretar, pues es un conjunto de árboles de decisión, y su output es más comprensibles.
+    -   Gradient Boosting, aunque similar a RF, puede ser un poco más complejo debido a la secuencialidad del boosting.
+    -   XGBoost es más difícil de interpretar. Utiliza técnicas avanzadas de boosting.
 
 # CONCLUSIÓN
 
@@ -1304,22 +1267,22 @@ Es bueno remarcar la parte de la sugerencia sobre RandomForestClassifier. Me tom
 
 Es correcto decir que, es posible ahondar un poco más en los datos para crear nuevas carásteristicas y reentrenar modelos para obervar si estos son más exactos o más óptimos respecto a las nuevas características que puedan agregarse a los datos mediante la ingeniería de estas.
 
-
-Se tuvo que omitir el paso de los valores SHAP debido a fallas en el código al momento de ejecutarse .shap_summary , por lo que se procedio a analizar el comportamientos de las selecciones hechas por boruta a través de validación cruzada empleando StratifiedKFold.
-A parte de la anterior dificultad, el proceso de encodificado fue un poco complicado al momento de elegir entre el drop='first' y el agregado en el nombre de las columnas en los datos resultantes a la encodificación y escalado. Se pudo abordar accediendo a la información de la respectiva librería, al igual que en muchos pasos realizados a través del presente trabajo.
+Se tuvo que omitir el paso de los valores SHAP debido a fallas en el código al momento de ejecutarse .shap_summary , por lo que se procedio a analizar el comportamientos de las selecciones hechas por boruta a través de validación cruzada empleando StratifiedKFold. A parte de la anterior dificultad, el proceso de encodificado fue un poco complicado al momento de elegir entre el drop='first' y el agregado en el nombre de las columnas en los datos resultantes a la encodificación y escalado. Se pudo abordar accediendo a la información de la respectiva librería, al igual que en muchos pasos realizados a través del presente trabajo.
 
 Es bastante fácil preveer cuáles son los pasos claves para la solución del proyecto y el cumplimiento de lo exigido por Interconnect: el análisis exploratorio inicial de datos para comprender, en la medida de lo posible, la distribución, estadística e información que poseen los mismos. El manejo de los valores ausentes fue clave, teniendo en cuenta que se debían tratar de maneras específicas para que el modelo de aprendizaje discriminase mejor. Además, se optimizo la distribusión de clases con SMOTE para balancearlas, permitiendo generar muestras sintéticas de la clase minoritaria sin perder información valiosa, así aseguramos que el modelo no esté sesgado hacia la clase mayoritaria y poder trabajar el problema de clasificación desbalanceado que se nos presenta. La ingeniería de características y la selección de las mismas hechas por Boruta fueron decisivas, pues nos permitiío obtener las características más relevantes de los datos respecto al target (abandono); se combinó, como se vio, con un algoritmo basado en Random Forest, añadiendo un nivel extra de estabilidad, ya que trabaja bien con conjuntos de datos complejos; probablemente, quienes mejoraron el rendimiento del modelo al crearse y seleccionarse las características más relevantes para realizar las predicciones en el conjunto de prueba antes de estudiar, con hiperparametros ajustados y seleccionados por GridSearch, las predicciones en el respectivo conjunto de entrenamiento dado los lineamientos de interconnect. Por último, también es imporante destacar el trabajo hecho con el Pipeline y la validación cruzada, pues esto permitió confirmar que las características seleccionadas son estables dado distintas particiones de datos sin verse interrumpido o repetitivo en la evaluación de otros modelos gracias al pipeline creado; esto permitió tener un flujo más eficiencia al momento del trabajo, obteniendo entonces una garantía en la replicabilidad de cada paso en cada uno de modelos, una ventaja para trabajar de manera consistente y coherente en la aplicación de las trasnformaciones respectivas y necesarias para cada uno de los conjuntos.
 
 El modelo final seleccionado:
 
-    - GradientBoostingClassifier con AUC-ROC = 0.97. Mejor modelo optimizado en max_depth=7, n_estimators=200, learning_rate=0.1 y subsample=1.0. En tal proceso de optimizacións, el mejor modelo alcanzó AUC-ROC=0.9815. Su Accuracy 0.94, acertando el 94% de las predicciones.
+```         
+- GradientBoostingClassifier con AUC-ROC = 0.97. Mejor modelo optimizado en max_depth=7, n_estimators=200, learning_rate=0.1 y subsample=1.0. En tal proceso de optimizacións, el mejor modelo alcanzó AUC-ROC=0.9815. Su Accuracy 0.94, acertando el 94% de las predicciones.
+```
 
 Modelo a considerar:
 
-    - RandomForestClassifier con AUC-ROC=0.89, superando lo solicitado. Eso sí, es propenso a confundir las clases, pero, la facilidad de manipulación del modelo permite jugar con los hiperparámetros del mismo, esto se puede observar ya que la mejor puntuación obtenida por parte del bosque aleatorio fue de 0.96, por lo que sería de interés tomarlo en consideración, pese al alto coste computacional.
+```         
+- RandomForestClassifier con AUC-ROC=0.89, superando lo solicitado. Eso sí, es propenso a confundir las clases, pero, la facilidad de manipulación del modelo permite jugar con los hiperparámetros del mismo, esto se puede observar ya que la mejor puntuación obtenida por parte del bosque aleatorio fue de 0.96, por lo que sería de interés tomarlo en consideración, pese al alto coste computacional.
+```
 
-Como recomendaciones finales, es verdad que XGBoost posee un rendimiento ligeramente superior pero, en términos de computabilidad, puede ser más costos pesé a ofecer más flexibilidad en el ajuste fino del modelo.
-Ahora, puede que RandomForest halla cumplido con lo deseado por poco, pero el coste computacional que requiere para nuestra solución es de las más altas, caso contrario que pasa con GradientBoosting aunque este último es un poco menos interpretable.
+Como recomendaciones finales, es verdad que XGBoost posee un rendimiento ligeramente superior pero, en términos de computabilidad, puede ser más costos pesé a ofecer más flexibilidad en el ajuste fino del modelo. Ahora, puede que RandomForest halla cumplido con lo deseado por poco, pero el coste computacional que requiere para nuestra solución es de las más altas, caso contrario que pasa con GradientBoosting aunque este último es un poco menos interpretable.
 
 En fin, en términos de eficiencia computacional, XGBoost ofrece una alta flexibilidad y personalización en ajustes de hiperparámetros.
-
