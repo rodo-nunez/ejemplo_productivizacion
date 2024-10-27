@@ -75,10 +75,10 @@ from IPython.display import display, HTML
 ```
 
 ```{python}
-df_contract = pd.read_csv('/home/USER/datasets/contract.csv')
-df_personal = pd.read_csv('/home/USER/datasets/personal.csv')
-df_internet = pd.read_csv('/home/USER/datasets/internet.csv')
-df_phone = pd.read_csv('/home/USER/datasets/phone.csv')
+df_contract = pd.read_csv('datasets/contract.csv')
+df_personal = pd.read_csv('datasets/personal.csv')
+df_internet = pd.read_csv('datasets/internet.csv')
+df_phone = pd.read_csv('datasets/phone.csv')
 ```
 
 ### Explorando los Datos
