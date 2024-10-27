@@ -63,8 +63,6 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 
-import tensorflow as tf
-
 from lightgbm import LGBMClassifier
 from xgboost import XGBClassifier
 from catboost import CatBoostClassifier
@@ -1368,59 +1366,6 @@ Una pequeña comparación:
     - Random Forest es el más fácil de interpretar, pues es un conjunto de árboles de decisión, y su output es más comprensibles.
     - Gradient Boosting, aunque similar a RF, puede ser un poco más complejo debido a la secuencialidad del boosting.
     - XGBoost y CatBoost son más difíciles de interpretar. Ambos utilizan técnicas avanzadas de boosting. Eso sí, CatBoost ofrece algunas ventajas en términos de interpretabilidad nativa para variables categóricas.
-
-### Modelo excluido: Red Neuronal con Keras
-
-La red que se contruye a continuación consta de una capa de entrada con tantas neuronas como el número de características en feature_train_selected, contiene dos capas ocultas:
-- Primera capa con 15 neuronas y función de activación tanh.
-- Segunda capa con 5 neuronas, también usando tanh.
-- Capa de salida: una sola neurona con activación sigmoid esto producirá una probabilidad que clasifica entre dos clases.
-
-Se generaran probabilidades de clase con predict y se binarizaran las predicciones con un umbral de 0.5.
-
-```{python}
-%time
-neural_model = tf.keras.models.Sequential()
-neural_model.add(tf.keras.layers.Dense(units=15, input_dim=feature_train_selected.shape[1], activation='tanh'))
-neural_model.add(tf.keras.layers.Dense(units=5, activation='tanh'))
-neural_model.add(tf.keras.layers.Dense(units=1, activation='sigmoid'))
-
-#compilo
-neural_model.compile(loss='binary_crossentropy', #función de pérdida. Problemas de clasificación binaria
-             optimizer=tf.keras.optimizers.Adam(),#optimización estocástica del gradiente
-             metrics=[tf.keras.metrics.AUC(name='auc')])
-
-
-
-early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-
-history = neural_model.fit(feature_train_selected, 
-                   target_train_balanced, 
-                   epochs=100, 
-                   batch_size=32, 
-                   validation_data=(feature_valid_selected, valid_target),
-                   callbacks=[early_stopping])#detiene el entrenamiento ayudando a evitar un número innecesario de epocas
-
-
-loss, auc_score = neural_model.evaluate(feature_test_selected, test_target, verbose=0)
-print(f"Puntuación AUC-ROC en conjunto de prueba: {auc_score}")
-
-# Realizar predicciones
-y_pred_proba = neural_model.predict(feature_test_selected).ravel()  # Probabilidades para AUC-ROC
-y_pred = (y_pred_proba > 0.5).astype(int)  # Predicciones binarizadas
-
-print("Reporte de Clasificación:")
-print(classification_report(test_target, y_pred))
-
-print("Puntuación AUC-ROC:")
-print(roc_auc_score(test_target, y_pred_proba))
-```
-
-Obtenemos las epocas suficientes y observamos que para las clases existe:
-    - Clase 0: Precisión de 0.91, recall de 0.81
-    - Clase 1: Precisión de 0.60, recall de 0.77
-
-AUC-ROC: 0.871, lo cual indica una buena capacidad para discriminar entre las dos clases. El modelo detecta bien los casos positivos. Precisión para la clase 1 es relativamente baja (0.60), lo que podría indicar un desbalance en los datos o, lo más seguro, un desajuste en los hiperparámetros.
 
 # CONCLUSIÓN
 
