@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import pandas as pd
+pd.options.display.max_columns = None
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -29,8 +30,19 @@ df_personal = pd.read_csv('files/datasets/input/personal.csv')
 df_internet = pd.read_csv('files/datasets/input/internet.csv')
 df_phone = pd.read_csv('files/datasets/input/phone.csv')
 
-# Duplicados ----------------------------------------
+# Reemplazo de nulos que no introducen data leakage ----------------------------------------
+# ! Estos remplazos no introducen data leakage. Si queremos agregar otros reemplazos hay que analizar si es bueno ponerlos acá o no.
 
+def replace_spaces(DataFrames):
+    for df in DataFrames:
+        df.replace(' ', np.nan, inplace=True)
+
+dataframes = [df_contract, df_personal, df_internet, df_phone]
+replace_spaces(dataframes)
+
+df_contract['TotalCharges'] = df_contract['TotalCharges'].fillna(0)
+
+# Duplicados ----------------------------------------
 
 def duplicates(dfs):
     duplicated = {}
@@ -52,7 +64,7 @@ df_contract['BeginDate'] = pd.to_datetime(
 # Fecha de referencia para contratos sin EndDate
 df_contract['EndDate'] = pd.to_datetime(
     df_contract['EndDate'], errors='coerce')
-reference_date = pd.to_datetime('2020-02-01')
+reference_date = pd.to_datetime('2020-02-01') # TODO Pasar a archivo de variables globales
 
 
 # Función que calcula duración en meses
@@ -79,15 +91,13 @@ df_contract['target'] = (df_contract['EndDate'] < reference_date).astype(int)
 
 # Convetir a categorico
 
-
 def categorical_value(df, columns):
     for column in columns:
         df[column] = df[column].astype('category')
-    return df
-
+    return None
 
 categorical_contract = ['Type', 'PaymentMethod', 'PaperlessBilling']
-df_contract = categorical_value(df_contract, categorical_contract)
+categorical_value(df_contract, categorical_contract)
 
 # Convirtiendo TotalCharges a númerico
 df_contract['TotalCharges'] = pd.to_numeric(
@@ -99,15 +109,15 @@ df_contract['EndDate'] = df_contract['EndDate'].fillna(
 
 # df_personal
 categorical_personal = ['gender', 'Partner', 'Dependents']
-df_personal = categorical_value(df_personal, categorical_personal)
+categorical_value(df_personal, categorical_personal)
 
 # df_internet
 categorical_internet = ['InternetService', 'OnlineSecurity', 'OnlineBackup',
                         'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies']
-df_internet = categorical_value(df_internet, categorical_internet)
+categorical_value(df_internet, categorical_internet)
 
 # df_phone
-df_phone = categorical_value(df_phone, ['MultipleLines'])
+categorical_value(df_phone, ['MultipleLines'])
 
 # Combinando DataFrames ----------------------------------------
 

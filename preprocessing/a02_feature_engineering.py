@@ -1,5 +1,10 @@
+# Librerias ---------------------------------------- 
+
 import pandas as pd
+pd.options.display.max_columns = None
 import numpy as np
+
+# Leer input ---------------------------------------- 
 
 data = pd.read_feather("files/datasets/intermediate/a01_datos_preprocesados.feather")
 
@@ -54,5 +59,15 @@ data = data.fillna(-1)
 
 data['target'] = data.pop('target')
 
+# TODO: Mover esta funcion de aqui y de a01 a la carpeta functions
+def categorical_value(df, columns):
+    for column in columns:
+        df[column] = df[column].astype('category')
+    return None
+
 # convertimos a categorico la columna faltante
 categorical_value(data, ['internet_multilines', 'automatic_pay', 'senior_citizen'])
+
+# Escritura de output ---------------------------------------- 
+
+data.to_feather("files/datasets/intermediate/a02_feature_engineering_done.feather")
