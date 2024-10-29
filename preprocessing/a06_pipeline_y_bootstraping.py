@@ -1,3 +1,31 @@
+# Librerias ---------------------------------------- 
+
+import pandas as pd
+import numpy as np
+pd.options.display.max_columns = None
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score
+import joblib
+
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report
+
+from lightgbm import LGBMClassifier
+from xgboost import XGBClassifier
+
+# Leer input ---------------------------------------- 
+
+# TODO Terminar y testear
+
+feature_train_selected = joblib.load('files/datasets/intermediate/a05_feature_train_selected.pkl')
+feature_valid_selected = joblib.load('files/datasets/intermediate/a05_feature_valid_selected.pkl')
+feature_test_selected = joblib.load('files/datasets/intermediate/a05_feature_test_selected.pkl')
+feature_train_balanced = joblib.load('files/datasets/intermediate/a05_feature_train_balanced.pkl')
+target_train_balanced = joblib.load('files/datasets/intermediate/a05_target_train_balanced.pkl')
 
 # Pipelines ---------------------------------------- 
 

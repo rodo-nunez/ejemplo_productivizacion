@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 
 import pandas as pd
 pd.options.display.max_columns = None
+import joblib
+
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -152,3 +154,5 @@ data[cat_cols] = data[cat_cols].astype(str)
 # Guardamos datos ----------------------------------------
 
 data.to_feather("files/datasets/intermediate/a01_datos_preprocesados.feather")
+joblib.dump(cat_cols, 'files/datasets/intermediate/a01_cat_cols.pkl')
+joblib.dump(num_cols, 'files/datasets/intermediate/a01_num_cols.pkl')
