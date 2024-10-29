@@ -67,10 +67,10 @@ from boruta import BorutaPy
 ```
 
 ```{python}
-df_contract = pd.read_csv('datasets/contract.csv')
-df_personal = pd.read_csv('datasets/personal.csv')
-df_internet = pd.read_csv('datasets/internet.csv')
-df_phone = pd.read_csv('datasets/phone.csv')
+df_contract = pd.read_csv('files/datasets/input/contract.csv')
+df_personal = pd.read_csv('files/datasets/input/personal.csv')
+df_internet = pd.read_csv('files/datasets/input/internet.csv')
+df_phone = pd.read_csv('files/datasets/input/phone.csv')
 ```
 
 ### Explorando los Datos
