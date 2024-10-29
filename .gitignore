@@ -9,6 +9,7 @@
 *.jpg
 *.pdf
 *.html
+*.pkl
 /.project
 .directory
 files
