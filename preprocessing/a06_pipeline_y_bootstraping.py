@@ -26,6 +26,11 @@ feature_valid_selected = joblib.load('files/datasets/intermediate/a05_feature_va
 feature_test_selected = joblib.load('files/datasets/intermediate/a05_feature_test_selected.pkl')
 feature_train_balanced = joblib.load('files/datasets/intermediate/a05_feature_train_balanced.pkl')
 target_train_balanced = joblib.load('files/datasets/intermediate/a05_target_train_balanced.pkl')
+skf = joblib.load('files/datasets/intermediate/a05_skf.pkl')
+valid_target = pd.read_csv("files/datasets/intermediate/a03_valid_target.csv")
+test_target = pd.read_csv("files/datasets/intermediate/a03_test_target.csv")
+
+target_train_balanced = target_train_balanced.values.ravel()
 
 # Pipelines ---------------------------------------- 
 
@@ -84,7 +89,9 @@ for name, pipeline in pipelines.items():
         feature_test_bootstrap = feature_test_selected.iloc[indices]
         target_test_bootstrap = test_target.iloc[indices]
         bootstrap_predictions = pipeline.predict(feature_test_bootstrap)
-        bootstrap_scores.append(np.mean(bootstrap_predictions == target_test_bootstrap))
+        bootstrap_scores.append(np.mean(bootstrap_predictions == target_test_bootstrap.values.ravel()))
         
     print("Media de las puntuaciones Bootstrap:", np.mean(bootstrap_scores))
     print("Desviación estándar de las puntuaciones Bootstrap:", np.std(bootstrap_scores))
+
+
