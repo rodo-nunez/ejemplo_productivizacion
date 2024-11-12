@@ -33,8 +33,8 @@ os.system(f"python{extension_binarios} preprocessing/a02_feature_engineering.py"
 os.system(f"python{extension_binarios} preprocessing/a03_division_train_test.py")
 os.system(f"python{extension_binarios} preprocessing/a04_preproceso_post_division_train_test.py")
 os.system(f"python{extension_binarios} preprocessing/a05_preproceso_dependiente_del_modelo.py")
-os.system(f"python{extension_binarios} preprocessing/a06_pipeline_y_bootstraping.py")
+os.system(f"python{extension_binarios} preprocessing/a06_pipeline_y_bootstraping_para_comparar_modelos.py")
 
 # Modelo ---------------------------------------- 
 
-os.system(f"python{extension_binarios} models/b01_creacion_de_modelos.py")
+os.system(f"python{extension_binarios} models/b01_entrenamiento_xgboost.py")
