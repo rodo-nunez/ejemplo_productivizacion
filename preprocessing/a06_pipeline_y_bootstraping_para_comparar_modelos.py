@@ -22,10 +22,7 @@ import logging
 # Configuracion del archivo de log ---------------------------------------- 
 logging.basicConfig(filename='files/modeling_output/logs/a06_resultados_modelos.log', level=logging.INFO, format='%(asctime)s - %(message)s', filemode='w')
 
-
 # Leer input ---------------------------------------- 
-
-# TODO Terminar y testear
 
 feature_train_selected = joblib.load('files/datasets/intermediate/a05_feature_train_selected.pkl')
 feature_valid_selected = joblib.load('files/datasets/intermediate/a05_feature_valid_selected.pkl')

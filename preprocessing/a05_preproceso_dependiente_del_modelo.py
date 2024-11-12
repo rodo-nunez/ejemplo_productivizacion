@@ -22,8 +22,6 @@ train_target = pd.read_csv("files/datasets/intermediate/a03_train_target.csv")
 valid_target = pd.read_csv("files/datasets/intermediate/a03_valid_target.csv")
 test_target = pd.read_csv("files/datasets/intermediate/a03_test_target.csv")
 
-# TODO Arreglar este script. Las dimensiones no coinsiden
-
 preprocessor = joblib.load('files/datasets/intermediate/a04_preprocessor.pkl')
 
 # SMOTE ---------------------------------------- 
