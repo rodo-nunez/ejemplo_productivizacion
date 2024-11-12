@@ -72,6 +72,11 @@ plt.xlabel('Falsos Positivos')
 plt.ylabel('Verdaderos Positivos')
 plt.title('Curva ROC')
 plt.legend(loc="lower right")
+plt.savefig('files/modeling_output/figures/b01_curva_roc_best_xgb.pdf', format='pdf')
 plt.show()
+plt.close()
 
+# Guardamos modelo ---------------------------------------- 
+
+joblib.dump(best_xgb, 'files/modeling_output/model_fit/b01_best_xgb_model.joblib')
 
