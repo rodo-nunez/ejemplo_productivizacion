@@ -17,6 +17,12 @@ from sklearn.metrics import classification_report
 from lightgbm import LGBMClassifier
 from xgboost import XGBClassifier
 
+import logging
+
+# Configuracion del archivo de log ---------------------------------------- 
+logging.basicConfig(filename='files/modeling_output/logs/a06_resultados_modelos.log', level=logging.INFO, format='%(asctime)s - %(message)s', filemode='w')
+
+
 # Leer input ---------------------------------------- 
 
 # TODO Terminar y testear
@@ -64,22 +70,22 @@ pipelines = {
 # Bootstrap ---------------------------------------- 
 
 for name, pipeline in pipelines.items():
-    print(f"\nModelo: {name}")
+    logging.info(f"\nModelo: {name}")
 
     cv_scores = cross_val_score(pipeline, feature_train_selected, target_train_balanced, cv=skf, scoring='accuracy')
-    print(f"Puntuaciones de validación cruzada: {cv_scores}")
-    print(f"Promedio de las puntuaciones: {np.mean(cv_scores)}")
+    logging.info(f"Puntuaciones de validacion cruzada: {cv_scores}")
+    logging.info(f"Promedio de las puntuaciones: {np.mean(cv_scores)}")
         
     pipeline.fit(feature_train_selected, target_train_balanced)
     valid_predictions = pipeline.predict(feature_valid_selected)
     valid_report = classification_report(valid_target, valid_predictions)
-    print("Reporte de clasificación en conjunto de validación:")
-    print(valid_report)
+    logging.info("Reporte de clasificacion en conjunto de validacion:")
+    logging.info(valid_report)
         
     test_predictions = pipeline.predict(feature_test_selected)
     test_report = classification_report(test_target, test_predictions)
-    print("Reporte de clasificación en conjunto de prueba:")
-    print(test_report)
+    logging.info("Reporte de clasificacion en conjunto de prueba:")
+    logging.info(test_report)
         
     #Bootstraping
     n_iterations = 1000
@@ -91,7 +97,7 @@ for name, pipeline in pipelines.items():
         bootstrap_predictions = pipeline.predict(feature_test_bootstrap)
         bootstrap_scores.append(np.mean(bootstrap_predictions == target_test_bootstrap.values.ravel()))
         
-    print("Media de las puntuaciones Bootstrap:", np.mean(bootstrap_scores))
-    print("Desviación estándar de las puntuaciones Bootstrap:", np.std(bootstrap_scores))
+    logging.info("Media de las puntuaciones Bootstrap:", np.mean(bootstrap_scores))
+    logging.info("Desviacion estandar de las puntuaciones Bootstrap:", np.std(bootstrap_scores))
 
 
