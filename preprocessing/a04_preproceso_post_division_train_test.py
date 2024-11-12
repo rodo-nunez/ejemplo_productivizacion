@@ -17,9 +17,9 @@ valid_target = pd.read_csv("files/datasets/intermediate/a03_valid_target.csv")
 test_features = pd.read_feather("files/datasets/intermediate/a03_test_features.feather")
 test_target = pd.read_csv("files/datasets/intermediate/a03_test_target.csv")
 
-# Escalamiento ---------------------------------------- 
+# Escalamiento y OHE ---------------------------------------- 
 
-cat_cols = train_features.select_dtypes(include=['category']).columns.tolist()
+cat_cols = train_features.select_dtypes(include=['category', 'object']).columns.tolist()
 num_cols = train_features.select_dtypes(include=['float64', 'int64']).columns.tolist()
 
 preprocessor = ColumnTransformer(
@@ -27,6 +27,7 @@ preprocessor = ColumnTransformer(
         ('num', StandardScaler(), num_cols),
         ('cat', OneHotEncoder(drop=None, sparse_output=False), cat_cols)
     ],
+    force_int_remainder_cols=False,
     remainder='passthrough'
 )
 
@@ -34,12 +35,28 @@ feature_train_transformed = preprocessor.fit_transform(train_features) #! Creamo
 feature_valid_transformed = preprocessor.transform(valid_features)
 feature_test_transformed = preprocessor.transform(test_features)
 
+feature_train_transformed_df = pd.DataFrame(
+    feature_train_transformed, 
+    columns=preprocessor.get_feature_names_out(), 
+    index=train_features.index 
+)
+feature_valid_transformed_df = pd.DataFrame(
+    feature_valid_transformed, 
+    columns=preprocessor.get_feature_names_out(), 
+    index=valid_features.index 
+)
+feature_test_transformed_df = pd.DataFrame(
+    feature_test_transformed, 
+    columns=preprocessor.get_feature_names_out(), 
+    index=test_features.index 
+)
+
 # Escribir outputs ---------------------------------------- 
 
-with open('files/datasets/intermediate/a04_feature_train_transformed.pkl', 'wb') as file: 
-    pickle.dump(feature_train_transformed, file) 
-with open('files/datasets/intermediate/a04_feature_valid_transformed.pkl', 'wb') as file: 
-    pickle.dump(feature_valid_transformed, file) 
-with open('files/datasets/intermediate/a04_feature_test_transformed.pkl', 'wb') as file: 
-    pickle.dump(feature_test_transformed, file) 
+with open('files/datasets/intermediate/a04_feature_train_transformed_df.pkl', 'wb') as file: 
+    pickle.dump(feature_train_transformed_df, file) 
+with open('files/datasets/intermediate/a04_feature_valid_transformed_df.pkl', 'wb') as file: 
+    pickle.dump(feature_valid_transformed_df, file) 
+with open('files/datasets/intermediate/a04_feature_test_transformed_df.pkl', 'wb') as file: 
+    pickle.dump(feature_test_transformed_df, file) 
 joblib.dump(preprocessor, 'files/datasets/intermediate/a04_preprocessor.pkl')
