@@ -8,7 +8,7 @@ import params as params
 # Argumentos por linea de comandos ---------------------------------------- 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--periodo', default=f'{params.periodo_YYYYMM}', help='periodo en formato YYYYMM')
+parser.add_argument('--periodo', default=f'{params.periodo_YYYYMM_por_defecto}', help='periodo en formato YYYYMM')
 
 try:
     args = parser.parse_args()
@@ -24,15 +24,16 @@ else:
 
 # Info ---------------------------------------- 
 
-print(f"---------------------------------- \nComenzando proceso para periodo: {args.periodo}\n----------------------------------")
+print(f"---------------------------------- \nComenzando proceso de entrenamiento de modelos \n----------------------------------")
 
 # Preproceso ---------------------------------------- 
 
-os.system(f"python{extension_binarios} preprocessing/a01_preproceso.py")
-
-os.system(f"python{extension_binarios} preprocessing/a02_escalador.py")
-
-os.system(f"python{extension_binarios} preprocessing/a03_split_train_test.py")
+os.system(f"python{extension_binarios} preprocessing/a01_preproceso_general.py")
+os.system(f"python{extension_binarios} preprocessing/a02_feature_engineering.py")
+os.system(f"python{extension_binarios} preprocessing/a03_division_train_test.py")
+os.system(f"python{extension_binarios} preprocessing/a04_preproceso_post_division_train_test.py")
+os.system(f"python{extension_binarios} preprocessing/a05_preproceso_dependiente_del_modelo.py")
+os.system(f"python{extension_binarios} preprocessing/a06_pipeline_y_bootstraping.py")
 
 # Modelo ---------------------------------------- 
 
