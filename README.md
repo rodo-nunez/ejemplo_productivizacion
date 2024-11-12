@@ -142,3 +142,19 @@ Nombres de archivos
 -------
 
 Para mantener una estructura consistente y poder encontrar facilmente el resultado de la ejecusion que uno busca o el modelo que se entreno con ciertos parametros, etc, es importante que los nombres de los archivos de salida de cada script tengan consistencia. Por eso, es recomendable crear una funcion que asigne nombres a los archivos pasandole una serie de parametros. Estos parametros pueden ser las variables mas importantes que se modifican en el modelo, la fecha o periodo de ejecucion, el codigo del script que escribio el archivo, etc. Cada proyecto debe tener su propia funcion y en algunos casos bastara con 4 parametros, en otros se necesitarán 20.
+
+# Cómo ejecutar el proyecto
+
+## Setup de ambiente virtual
+
+Crear un ambiente virtual e instalar las librerías necesarias. Por ejemplo, usar `python -m venv .venv` para crear el ambiente virtual. Luego, activarlo automáticamente o con `source .venv/Scripts/activate` o algo similar (depende del tipo de terminal o ambiente de trabajo).
+
+Una vez que el ambiente virtual esté creado y activado, instalar las librerías necesarias de forma recursiva. Una opción es `pip install -r requirements.txt`
+
+## Entrenamiento del modelo
+
+Para entrenar el modelo, ejecutar 
+
+```py
+python pipeline/p01_pipeline.py
+```
