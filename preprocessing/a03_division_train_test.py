@@ -33,11 +33,9 @@ test_target = test_set['target']
 # Escribir outputs ---------------------------------------- 
 
 train_features.to_feather("files/datasets/intermediate/a03_train_features.feather")
-train_target.to_csv("files/datasets/intermediate/a03_train_target.csv")
+train_target.to_csv("files/datasets/intermediate/a03_train_target.csv", index=False)
 valid_features.to_feather("files/datasets/intermediate/a03_valid_features.feather")
-valid_target.to_csv("files/datasets/intermediate/a03_valid_target.csv")
+valid_target.to_csv("files/datasets/intermediate/a03_valid_target.csv", index=False)
 test_features.to_feather("files/datasets/intermediate/a03_test_features.feather")
-test_target.to_csv("files/datasets/intermediate/a03_test_target.csv")
-
-
+test_target.to_csv("files/datasets/intermediate/a03_test_target.csv", index=False)
 
