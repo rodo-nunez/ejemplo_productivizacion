@@ -1,5 +1,4 @@
-Canvas Analytics: **Nombre del Proyecto**
-======================
+# Canvas Analytics: **Nombre del Proyecto**
 
 ## Recursos Relevantes
 - [Documenentos](URL) : Link va dirigido a la documentacion del proyecto
@@ -65,7 +64,7 @@ Listado de todas las personas que participan del proyecto, incluyendo al respons
 
 ### Unidades de negocio
 
-Listado de todas las personas de otras áreas involucradas en el proyecto, indicando el área de negocio en la cual trabajan, su nombre y rol en el proyecto.
+Listado de todas las personas de otras áreas involucradas en el proyecto, indicando el área de negocio en la cual trabajan, su nombre y rol en el proyecto.
 
    + Persona n1 (Periodo)
    + Persona n2 (Periodo)
@@ -93,16 +92,15 @@ Listado de todas las personas de otras áreas involucradas en el proyecto, indic
   + **Descripción**:
   + **Periodo**:
 
-Estructura de proyecto
-======================
+# Estructura de proyecto
 
 Basicamente el proyecto se divide en 2 grande mundos, lo que esta dentro de la carpeta "files" y lo que no esta.
-Esta división es necesaria porque lo que esta fuera de files es codigo que se respalda en GIT (junto con todos los archivos de texto plano que no sean datasets u otro tipo de archivo grande), mientras que los archivos que no son texto plano o son muy grandes para ser versionados en Git, van a la carpeta files que se respalda en Amazon S3.
+Esta división es necesaria porque lo que esta fuera de files es codigo que se respalda en Git (junto con todos los archivos de texto plano que no sean datasets u otro tipo de archivo grande), mientras que los archivos que no son texto plano o son muy grandes para ser versionados en Git, van a la carpeta files que se respalda en Amazon S3.
 
 Cada compomente de un proyecto ha sido mapeado a una carpeta del template, de ser necesario mas, se pueden crear. La estructura es la siguiente:
 
-Fuera de Files
---------------
+## Fuera de Files
+
 Todo este contenido se respalda con git, por lo que debe haber solo codigo. Todo el resto debe estar considerado en el `.gitignore`.
 
 + **sandbox**: Scripts que no son parte del proyecto, son experimentos o no es claro donde ponerlos a priori.
@@ -115,8 +113,8 @@ Todo este contenido se respalda con git, por lo que debe haber solo codigo. Todo
 + **execution**: Scripts para ejecutar el modelo o proyecto. Estos son los que se llamarían desde un script en pipeline para el ejecutar con una periodicidad dada.
 + **test**: Scripts con tests unitarios para checkear que no haya problemas en varios niveles del codigo. Puede haber subcarpetas para guardar los test de preproceso, de modelo, de ETL o de lo que sea necesario por separado. Tambien se pueden separar por lenguaje de programacion si es necesario, para facilitar la ejecicion de todos los test por carpetas.
 
-Files
--------
+## Files
+
 Este contenido se respalda en algún object storage (como S3 en el caso de AWS).
 
 * **files/datasets**: Son los datos utilizados para el proyecto, las 3 carpetas que estan adentro corresponden al siguiente flujo:
@@ -138,23 +136,40 @@ Este contenido se respalda en algún object storage (como S3 en el caso de AWS).
     + files/modeling_output/**logs**: Aqui deben guardarse todos los logs de tiempos de ejecusion, errores de codigos automaticos, logs de debugging puntuales y otros tipos de logs.
     + files/modeling_output/**results**: Aqui deben guardarse todos los archivos con resultados importantes del proyecto y/o modelo. Por ejemplo, las tablas resumenes de performance de cada iteracion, importancia de las variables y cualquier otro tipo de resultado del modelo que sea importante rescatar. 
 
-Nombres de archivos
--------
+## Nombres de archivos
 
 Para mantener una estructura consistente y poder encontrar facilmente el resultado de la ejecusion que uno busca o el modelo que se entreno con ciertos parametros, etc, es importante que los nombres de los archivos de salida de cada script tengan consistencia. Por eso, es recomendable crear una funcion que asigne nombres a los archivos pasandole una serie de parametros. Estos parametros pueden ser las variables mas importantes que se modifican en el modelo, la fecha o periodo de ejecucion, el codigo del script que escribio el archivo, etc. Cada proyecto debe tener su propia funcion y en algunos casos bastara con 4 parametros, en otros se necesitarán 20.
 
-# Cómo ejecutar el proyecto
+Uno podría usar librerías que hagan algo así por uno. Independiente del método, es bueno tener consistencia para que todo sea más fácil de encontrar y entender.
 
-## Setup de ambiente virtual
+# Ejecusión del proyecto
 
-Crear un ambiente virtual e instalar las librerías necesarias. Por ejemplo, usar `python -m venv .venv` para crear el ambiente virtual. Luego, activarlo automáticamente o con `source .venv/Scripts/activate` o algo similar (depende del tipo de terminal o ambiente de trabajo).
+## Set up de ambiente virtual 
 
-Una vez que el ambiente virtual esté creado y activado, instalar las librerías necesarias de forma recursiva. Una opción es `pip install -r requirements.txt`
+Para ejecutar este proyecto de forma reproducible, es importante tener ambientes virtuales bien definidos y documentados.
 
-## Entrenamiento del modelo
+En el caso de este proyecto, usamos la versión de Python `3.12.7`, con las librerías en el `requirements.txt`.
 
-Para entrenar el modelo, ejecutar 
+Para replicar el ambiente virtual, simplemente ejecuta
 
-```py
-python pipeline/p01_pipeline.py
+```sh
+python -m venv .venv
+```
+
+Luego, selecciona el ambiente virtual (o actívalo). Si estás usando Visual Studio Code, puedes seleccionarlo como tu ambiente por defecto con el pop up que aparece al crearlo, o usando el comando `Python: Select Interpreter` al abrir la paleta de comandos. 
+
+Si no usas VSC, sino que lo quieres hacer por terminal, basta con ejecutar en una terminal de tipo Bash
+
+```sh
+source .venv/Scripts/activate
+```
+
+## Ejecución del proyecto
+
+### Entrenamiento
+
+Para ejecutar el pipeline de entrenamiento, ejecutar
+
+```sh
+python pipeline/p01_pipeline.py --modo_prueba False
 ```
