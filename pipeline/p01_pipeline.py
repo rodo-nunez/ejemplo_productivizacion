@@ -12,19 +12,12 @@ logging.basicConfig(filename='files/modeling_output/logs/p01_pipeline_entrenamie
 # Argumentos por linea de comandos ---------------------------------------- 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--periodo', default=f'{params.periodo_YYYYMM_por_defecto}', help='periodo en formato YYYYMM')
+parser.add_argument('--modo_prueba', default=f'{params.bool_modo_prueba_por_defecto}', help='Nos dice si estamos ejecutando el código en modo de pruebas o no. Un `True` hace que el código se ejecute mucho más rápido y ejecute lo escencial para verificar que se ejecuta sin bugs que rompen el código. Si es `False`, el código se ejecuta entero, lo que debería demorar mucho más.')
 
 try:
     args = parser.parse_args()
 except argparse.ArgumentTypeError as e:
     print(f"Invalid argument: {e}")
-    
-# Definir extension de ejecutables ---------------------------------------- 
-
-if params.sistema_operativo == 'Windows':
-        extension_binarios = ".exe"
-else:
-        extension_binarios = ""
 
 # Info ---------------------------------------- 
 
@@ -33,21 +26,19 @@ print(f"---------------------------------- \nComenzando proceso de entrenamiento
 # Preproceso ---------------------------------------- 
 
 logging.info("Ejecutando a01")
-os.system(f"python{extension_binarios} preprocessing/a01_preproceso_general.py")
+os.system(f"python preprocessing/a01_preproceso_general.py --modo_prueba {args.modo_prueba}")
 logging.info("Ejecutando a02")
-os.system(f"python{extension_binarios} preprocessing/a02_feature_engineering.py")
+os.system(f"python preprocessing/a02_feature_engineering.py --modo_prueba {args.modo_prueba}")
 logging.info("Ejecutando a03")
-os.system(f"python{extension_binarios} preprocessing/a03_division_train_test.py")
+os.system(f"python preprocessing/a03_division_train_test.py --modo_prueba {args.modo_prueba}")
 logging.info("Ejecutando a04")
-os.system(f"python{extension_binarios} preprocessing/a04_preproceso_post_division_train_test.py")
+os.system(f"python preprocessing/a04_preproceso_post_division_train_test.py --modo_prueba {args.modo_prueba}")
 logging.info("Ejecutando a05")
-os.system(f"python{extension_binarios} preprocessing/a05_preproceso_dependiente_del_modelo.py")
-logging.info("Ejecutando a06")
-os.system(f"python{extension_binarios} preprocessing/a06_pipeline_y_bootstraping_para_comparar_modelos.py")
+os.system(f"python preprocessing/a05_preproceso_dependiente_del_modelo.py --modo_prueba {args.modo_prueba}")
 
 # Modelo ---------------------------------------- 
 
 logging.info("Ejecutando b01")
-os.system(f"python{extension_binarios} models/b01_entrenamiento_xgboost.py")
+os.system(f"python models/b01_entrenamiento_xgboost.py --modo_prueba {args.modo_prueba}")
 
 logging.info("Terminado p01")

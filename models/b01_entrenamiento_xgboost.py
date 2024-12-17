@@ -15,6 +15,21 @@ else:
     import matplotlib
     matplotlib.use('Agg') 
 
+import argparse
+import os, sys
+sys.path.append(os.getcwd()) # Esto es para agregar al path la ruta de ejecución actual y poder importar respecto a la ruta del proyecto, desde donde se debe ejecutar el código
+import params as params
+
+# Argumentos por linea de comandos ---------------------------------------- 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--modo_prueba', default=f'{params.bool_modo_prueba_por_defecto}', help='Nos dice si estamos ejecutando el código en modo de pruebas o no. Un `True` hace que el código se ejecute mucho más rápido y ejecute lo escencial para verificar que se ejecuta sin bugs que rompen el código. Si es `False`, el código se ejecuta entero, lo que debería demorar mucho más.')
+
+try:
+    args = parser.parse_args()
+except argparse.ArgumentTypeError as e:
+    print(f"Invalid argument: {e}")
+
 # Leer datasets ---------------------------------------- 
 
 feature_train_selected = joblib.load('files/datasets/intermediate/a05_feature_train_selected.pkl')
@@ -28,20 +43,22 @@ test_target = pd.read_csv("files/datasets/intermediate/a03_test_target.csv")
 
 xgb_model = XGBClassifier(eval_metric='logloss')
 
-xgb_param_grid = {
-    'n_estimators': [100, 200],
-    'learning_rate': [0.01, 0.1],
-    'max_depth': [3, 5, 7],
-    'subsample': [0.8, 1.0],
-    'colsample_bytree': [0.7, 1.0]
-}
-# xgb_param_grid = {
-#     'n_estimators': [5],
-#     'learning_rate': [0.1],
-#     'max_depth': [3],
-#     'subsample': [0.8],
-#     'colsample_bytree': [0.7]
-# }
+if (args.modo_prueba == "True") | (args.modo_prueba == True):
+    xgb_param_grid = {
+        'n_estimators': [5],
+        'learning_rate': [0.1],
+        'max_depth': [3],
+        'subsample': [0.8],
+        'colsample_bytree': [0.7]
+    }
+else:
+    xgb_param_grid = {
+        'n_estimators': [100, 200],
+        'learning_rate': [0.01, 0.1],
+        'max_depth': [3, 5, 7],
+        'subsample': [0.8, 1.0],
+        'colsample_bytree': [0.7, 1.0]
+    }
 
 # GridSearch ---------------------------------------- 
 
