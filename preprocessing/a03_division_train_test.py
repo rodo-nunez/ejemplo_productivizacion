@@ -3,6 +3,20 @@
 import pandas as pd
 pd.options.display.max_columns = None
 from sklearn.model_selection import train_test_split
+import argparse
+import sys, os
+sys.path.append(os.getcwd()) # Esto es para agregar al path la ruta de ejecución actual y poder importar respecto a la ruta del proyecto, desde donde se debe ejecutar el código
+import params as params
+
+# Argumentos por linea de comandos ---------------------------------------- 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--modo_prueba', default=f'{params.bool_modo_prueba_por_defecto}', help='Nos dice si estamos ejecutando el código en modo de pruebas o no. Un `True` hace que el código se ejecute mucho más rápido y ejecute lo escencial para verificar que se ejecuta sin bugs que rompen el código. Si es `False`, el código se ejecuta entero, lo que debería demorar mucho más.')
+
+try:
+    args = parser.parse_args()
+except argparse.ArgumentTypeError as e:
+    print(f"Invalid argument: {e}")
 
 # Leer input ---------------------------------------- 
 
@@ -10,7 +24,10 @@ data = pd.read_feather("files/datasets/intermediate/a02_feature_engineering_done
 
 # División entre train y test ---------------------------------------- 
 
-reference_date = pd.to_datetime('2020-02-01') # TODO Pasar a archivo de variables globales
+if (args.modo_prueba == "True") | (args.modo_prueba == True):
+    reference_date = data['begin_date'].median()
+else:
+    reference_date = pd.to_datetime('2020-02-01') # TODO Pasar a archivo de variables globales
 
 valid_set = data[data['begin_date'] >= reference_date]
 train_test_set = data[data['begin_date'] < reference_date]

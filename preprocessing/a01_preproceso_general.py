@@ -1,6 +1,7 @@
 # Librerias ----------------------------------------
 
 import numpy as np
+import argparse
 import matplotlib.pyplot as plt
 
 import pandas as pd
@@ -25,12 +26,32 @@ from xgboost import XGBClassifier
 
 from boruta import BorutaPy
 
+import sys, os
+sys.path.append(os.getcwd()) # Esto es para agregar al path la ruta de ejecución actual y poder importar respecto a la ruta del proyecto, desde donde se debe ejecutar el código
+import params as params
+
+# Argumentos por linea de comandos ---------------------------------------- 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--modo_prueba', default=f'{params.bool_modo_prueba_por_defecto}', help='Nos dice si estamos ejecutando el código en modo de pruebas o no. Un `True` hace que el código se ejecute mucho más rápido y ejecute lo escencial para verificar que se ejecuta sin bugs que rompen el código. Si es `False`, el código se ejecuta entero, lo que debería demorar mucho más.')
+
+try:
+    args = parser.parse_args()
+except argparse.ArgumentTypeError as e:
+    print(f"Invalid argument: {e}")
+    
 # Lectura de datos ----------------------------------------
 
 df_contract = pd.read_csv('files/datasets/input/contract.csv')
 df_personal = pd.read_csv('files/datasets/input/personal.csv')
 df_internet = pd.read_csv('files/datasets/input/internet.csv')
 df_phone = pd.read_csv('files/datasets/input/phone.csv')
+
+if (args.modo_prueba == "True") | (args.modo_prueba == True):
+    df_contract = df_contract.head(params.n_filas_en_modo_prueba)
+    df_personal = df_personal.head(params.n_filas_en_modo_prueba)
+    df_internet = df_internet.head(params.n_filas_en_modo_prueba)
+    df_phone = df_phone.head(params.n_filas_en_modo_prueba)
 
 # Reemplazo de nulos que no introducen data leakage ----------------------------------------
 # ! Estos remplazos no introducen data leakage. Si queremos agregar otros reemplazos hay que analizar si es bueno ponerlos acá o no.
