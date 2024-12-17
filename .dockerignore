@@ -11,7 +11,7 @@
 *.html
 /.project
 .directory
-files
+# files
 .idea
 *.aux
 *.log
