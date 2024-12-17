@@ -19,6 +19,21 @@ from xgboost import XGBClassifier
 
 import logging
 
+import argparse
+import sys, os
+sys.path.append(os.getcwd()) # Esto es para agregar al path la ruta de ejecución actual y poder importar respecto a la ruta del proyecto, desde donde se debe ejecutar el código
+import params as params
+
+# Argumentos por linea de comandos ---------------------------------------- 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--modo_prueba', default=f'{params.bool_modo_prueba_por_defecto}', help='Nos dice si estamos ejecutando el código en modo de pruebas o no. Un `True` hace que el código se ejecute mucho más rápido y ejecute lo escencial para verificar que se ejecuta sin bugs que rompen el código. Si es `False`, el código se ejecuta entero, lo que debería demorar mucho más.')
+
+try:
+    args = parser.parse_args()
+except argparse.ArgumentTypeError as e:
+    print(f"Invalid argument: {e}")
+
 # Configuracion del archivo de log ---------------------------------------- 
 logging.basicConfig(filename='files/modeling_output/logs/a06_resultados_modelos.log', level=logging.INFO, format='%(asctime)s - %(message)s', filemode='w')
 
@@ -85,7 +100,10 @@ for name, pipeline in pipelines.items():
     logging.info(test_report)
         
     #Bootstraping
-    n_iterations = 1000
+    if (args.modo_prueba == "True") | (args.modo_prueba == True):
+        n_iterations = 1
+    else:
+        n_iterations = 1000
     bootstrap_scores = []
     for i in range(n_iterations):
         indices = np.random.choice(range(len(feature_test_selected)), size=len(feature_test_selected), replace=True)
