@@ -7,6 +7,11 @@ import platform
 
 sistema_operativo = platform.system()
 
+# Modo de prueba ---------------------------------------- 
+
+bool_modo_prueba_por_defecto = False
+n_filas_en_modo_prueba = 1000
+
 # Entrenamiento o ejecucion ---------------------------------------- 
 
 bool_entrtenamiento = False
