@@ -23,7 +23,7 @@
 *.Rds
 *.code-workspace
 *.pmml
-.vscode
+# .vscode
 # *.jar
 *.pem
 
