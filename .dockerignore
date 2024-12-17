@@ -1,4 +1,4 @@
-#GIT Datavenger
+# Binarios genericos ---------------------------------------- 
 
 *.RData
 *.RDS
@@ -27,7 +27,7 @@
 # *.jar
 *.pem
 
-#GIT IGNORE DE R
+# R
 
 # History files
 .Rhistory
