@@ -40,19 +40,26 @@ id_columns = ['customer_id', 'begin_date', 'end_date']
 
 train_features = train_set.drop(columns=id_columns + ['target'])
 train_target = train_set['target']
+train_ids = train_set[id_columns]
 
 valid_features = valid_set.drop(columns=id_columns + ['target'])
 valid_target = valid_set['target']
+valid_ids = valid_set[id_columns]
 
 test_features = test_set.drop(columns=id_columns + ['target'])
 test_target = test_set['target']
+test_ids = test_set[id_columns]
 
 # Escribir outputs ---------------------------------------- 
 
 train_features.to_feather("files/datasets/intermediate/a03_train_features.feather")
 train_target.to_csv("files/datasets/intermediate/a03_train_target.csv", index=False)
+train_ids.to_feather("files/datasets/intermediate/a03_train_ids.feather")
+
 valid_features.to_feather("files/datasets/intermediate/a03_valid_features.feather")
 valid_target.to_csv("files/datasets/intermediate/a03_valid_target.csv", index=False)
+valid_ids.to_feather("files/datasets/intermediate/a03_valid_ids.feather")
+
 test_features.to_feather("files/datasets/intermediate/a03_test_features.feather")
 test_target.to_csv("files/datasets/intermediate/a03_test_target.csv", index=False)
-
+test_ids.to_feather("files/datasets/intermediate/a03_test_ids.feather")
