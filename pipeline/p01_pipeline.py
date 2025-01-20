@@ -29,6 +29,8 @@ print(f"---------------------------------- \nComenzando proceso de entrenamiento
 
 logging.info("Ejecutando a01")
 os.system(f"python preprocessing/a01_preproceso_general.py --modo_prueba {args.modo_prueba} --bool_entrtenamiento {args.bool_entrtenamiento} --periodo {args.periodo}")
+logging.info("Ejecutando a011")
+os.system(f"Rscript preprocessing/a011_filtrado_de_datos.R --modo_prueba {args.modo_prueba} --bool_entrtenamiento {args.bool_entrtenamiento} --periodo {args.periodo}")
 logging.info("Ejecutando a02")
 os.system(f"python preprocessing/a02_feature_engineering.py --modo_prueba {args.modo_prueba} --bool_entrtenamiento {args.bool_entrtenamiento} --periodo {args.periodo}")
 logging.info("Ejecutando a03")
