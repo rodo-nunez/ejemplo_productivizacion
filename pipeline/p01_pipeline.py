@@ -32,7 +32,7 @@ os.system(f"python preprocessing/a01_preproceso_general.py --modo_prueba {args.m
 logging.info("Ejecutando a02")
 os.system(f"python preprocessing/a02_feature_engineering.py --modo_prueba {args.modo_prueba} --bool_entrtenamiento {args.bool_entrtenamiento} --periodo {args.periodo}")
 logging.info("Ejecutando a03")
-os.system(f"python preprocessing/a03_division_train_test.py --modo_prueba {args.modo_prueba} --bool_entrtenamiento {args.bool_entrtenamiento} --periodo {args.periodo}")
+os.system(f"python preprocessing/a03_division_train_test.py --modo_prueba {args.modo_prueba} --bool_entrtenamiento {args.bool_entrtenamiento} --periodo {args.periodo}") # TODO Este script podría no ser necesario en la evaluación del modelo, al igual que varios otros. Para eso puede servir el booleanos "args.bool_entrtenamiento". Para ejecutarlos dentro de un "if". También es importante que los outputs se evaluación no sobre escriban a los de entrenamiento, ni viceversa.
 logging.info("Ejecutando a04")
 os.system(f"python preprocessing/a04_preproceso_post_division_train_test.py --modo_prueba {args.modo_prueba} --bool_entrtenamiento {args.bool_entrtenamiento} --periodo {args.periodo}")
 logging.info("Ejecutando a05")

@@ -26,7 +26,7 @@ model = joblib.load('files/modeling_output/model_fit/b01_best_xgb_model.joblib')
 
 # Lectura de datos ---------------------------------------- 
 
-feature_test_selected = joblib.load(f'files/datasets/intermediate/a05_feature_test_selected{entrenamiento_sufix}.pkl')
+feature_test_selected = joblib.load(f'files/datasets/intermediate/a05_feature_test_selected{entrenamiento_sufix}.pkl') # TODO Los nombres de los input deben cambiarse en todos los archivos para poder usar "entrenamiento_sufix" apropiadamente
 data_features = pd.read_feather(f"files/datasets/intermediate/a03_test_features{entrenamiento_sufix}.feather")
 data_ids = pd.read_feather(f"files/datasets/intermediate/a03_test_ids{entrenamiento_sufix}.feather")
 
