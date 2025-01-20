@@ -36,15 +36,15 @@ train_set, test_set = train_test_split(train_test_set, test_size=0.25, random_st
 
 # Division entre features y target ---------------------------------------- 
 
-columns_to_drop = ['customer_id', 'begin_date', 'end_date']
+id_columns = ['customer_id', 'begin_date', 'end_date']
 
-train_features = train_set.drop(columns=columns_to_drop + ['target'])
+train_features = train_set.drop(columns=id_columns + ['target'])
 train_target = train_set['target']
 
-valid_features = valid_set.drop(columns=columns_to_drop + ['target'])
+valid_features = valid_set.drop(columns=id_columns + ['target'])
 valid_target = valid_set['target']
 
-test_features = test_set.drop(columns=columns_to_drop + ['target'])
+test_features = test_set.drop(columns=id_columns + ['target'])
 test_target = test_set['target']
 
 # Escribir outputs ---------------------------------------- 
