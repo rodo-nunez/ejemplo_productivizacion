@@ -79,9 +79,10 @@ RUN apt-get install python3-pip -y
 WORKDIR "/${WORKDIR}"
 COPY requirements.txt requirements.txt
 COPY renv.lock renv.lock
+# COPY renv renv
 
 # Copy .env ---------------------------------------- 
-# ! El .env hay que copiarlo en el docker del proyecto, no la plantilla generica. Y solo en caso de tener credenciales productivas en un ambiente de producción privado
+# ! Copiar el .env solo en caso de pruebas y tener mucho cuidado con filtrar credenciales
 
 # RUN cp .env ~/.env 
 
@@ -95,15 +96,16 @@ RUN pip${python_version_1_2} install -r requirements.txt
 
 EXPOSE 443
 
-# Copiar proyecto y otros ---------------------------------------- 
-
-COPY . .
-
 # Setup de ambiente virtual R ---------------------------------------- 
 
 RUN R -e "install.packages('renv')"
 RUN R -e "renv::restore()"
 
+# Copiar proyecto y otros ---------------------------------------- 
+
+COPY . .
+
 # Ejecutar proyecto ---------------------------------------- 
 
-# RUN sh pipeline/p01_pipeline.sh
+ENTRYPOINT [ "sh", "docker/docker_setup_and_run.sh" ] 
+CMD [ "--modo_prueba", "False", "--bool_entrtenamiento", "False", "--periodo", "202408" ]

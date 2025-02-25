@@ -11,3 +11,5 @@
 echo Ejecutando p01 con parametros: $@
 
 python pipeline/p01_pipeline.py $@
+
+# python pipeline/p01_pipeline.py --modo_prueba "False" --bool_entrtenamiento "False" --periodo "202408" 
