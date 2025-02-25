@@ -5,6 +5,9 @@ import argparse
 sys.path.append(os.getcwd()) # Esto es para agregar al path la ruta de ejecución actual y poder importar respecto a la ruta del proyecto, desde donde se debe ejecutar el código
 import params as params
 import logging
+import dotenv
+dotenv.load_dotenv()
+print(f"Estamos usando el usuario: {os.getenv('user')}") # Demostracion de como usar variables de ambiente en .env
 
 # Configuracion del archivo de log ---------------------------------------- 
 logging.basicConfig(filename='files/modeling_output/logs/p01_pipeline_entrenamiento.log', level=logging.INFO, format='%(asctime)s - %(message)s', filemode='w')
