@@ -36,4 +36,25 @@ data_docs_sites:
     site_index_builder:
       class_name: DefaultSiteIndexBuilder
 analytics_enabled:
-data_context_id: 109f20a9-53d1-485d-b6d6-1845401bc84e
+data_context_id: 7a67c2da-00df-4fdf-a5e6-82fa063f12b8
+fluent_datasources:
+  pandas:
+    type: pandas
+    id: 114ec0a9-5fab-43bc-8ef7-fbe0fac4564b
+    assets:
+      pd dataframe asset contract:
+        type: dataframe
+        id: d0cfc75c-20dc-4c38-9b28-fa90d5dcddf6
+        batch_metadata: {}
+        batch_definitions:
+          batch definition:
+            id: 96e3d98d-0e15-4afd-a7c7-6d9d4400b4c5
+            partitioner:
+  input_data:
+    type: pandas_filesystem
+    id: 246085ee-b39b-4fa4-84b9-15f3684eeae3
+    assets:
+      contract:
+        type: csv
+        id: b5324ed5-f101-41ae-a7c1-2f66a8da30bf
+    base_directory: files\datasets\input
