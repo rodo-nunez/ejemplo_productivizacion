@@ -37,9 +37,30 @@ batch_definition = (
 
 # Creamos una expectation para testear ----------------------------------------
 
-expectation = gx.expectations.ExpectColumnValuesToBeBetween(
+expectation_monthly_charges_between = gx.expectations.ExpectColumnValuesToBeBetween(
     column="MonthlyCharges", max_value=60, min_value=0
 )
+
+# Ejemplos de multiples expectations y cómo parametrizarlas con runtime parameters ---------------------------------------- 
+
+expectation_max_total_charges_between = gx.expectations.ExpectColumnMaxToBeBetween(
+    column="TotalCharges",
+    min_value={"$PARAMETER": "expect_total_charges_max_to_be_above"},
+    max_value={"$PARAMETER": "expect_total_charges_max_to_be_below"},
+)
+expectation_paperless_billing_values = gx.expectations.ExpectColumnValuesToBeInSet(
+    column="PaperlessBilling",
+    value_set=("Yes", "No"),
+    # value_set={"$PARAMETER": "expect_paperless_billing_values_to_be_in"}
+
+)
+
+runtime_expectation_parameters = {
+    "expect_total_charges_max_to_be_above": 30,
+    "expect_total_charges_max_to_be_below": 7000,
+    "expect_paperless_billing_values_to_be_in": ("Yes", "No")
+}
+# TODO Aplicar estos parámetros al ejecutar
 
 # Obtener el dataframe como un batch ----------------------------------------
 
@@ -52,7 +73,7 @@ batch_parameters = {"dataframe": df_contracts}
 batch = batch_definition.get_batch(batch_parameters=batch_parameters)
 
 # Testeamos la expectation ----------------------------------------
-validation_results = batch.validate(expectation)
+validation_results = batch.validate(expectation_monthly_charges_between)
 print(validation_results)
 
 
