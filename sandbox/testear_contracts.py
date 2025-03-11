@@ -77,6 +77,14 @@ validation_results = batch.validate(expectation_monthly_charges_between)
 print(validation_results)
 
 
+# Testeando runtime expectations ---------------------------------------- 
+
+validation_results = batch.validate(
+    expectation_max_total_charges_between, expectation_parameters=runtime_expectation_parameters
+)
+
+print(validation_results)
+
 # Validación de un batch, usando una validación ya definida ---------------------------------------- 
 
 # TODO: Agregar definición de validación
