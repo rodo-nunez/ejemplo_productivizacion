@@ -18,7 +18,7 @@ data_asset_name = "pd dataframe asset contract"
 
 data_asset = context.data_sources.get(data_source_name).get_asset(data_asset_name)
 
-batch_definition_name = "contact_batch"
+batch_definition_name = "contract_batch"
 
 # Agregamos batch definition al data asset ---------------------------------------- 
 
@@ -63,7 +63,7 @@ runtime_expectation_parameters = {
 
 # Definimos una expectation suite ---------------------------------------- 
 
-# expectation_suite_name = "contact_dataframe_expectation_suite"
+# expectation_suite_name = "contract_dataframe_expectation_suite"
 # expectation_suite = gx.ExpectationSuite(name=expectation_suite_name)
 
 # expectation_suite = context.suites.add(expectation_suite)
@@ -71,7 +71,7 @@ runtime_expectation_parameters = {
 # Recuperamos expectation suite ya guardado en data context, en caso de ya haberlo definido antes ---------------------------------------- 
 
 existing_expectation_suite_name = (
-    "contact_dataframe_expectation_suite"  
+    "contract_dataframe_expectation_suite"  
 )
 expectation_suite = context.suites.get(name=existing_expectation_suite_name)
 
