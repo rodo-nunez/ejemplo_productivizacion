@@ -68,6 +68,19 @@ suite = gx.ExpectationSuite(name=suite_name)
 
 suite = context.suites.add(suite)
 
+# Recuperamos expectation suite ya guardado en data context, en caso de ya haberlo definido antes ---------------------------------------- 
+
+existing_suite_name = (
+    "contact_dataframe_expectation_suite"  
+)
+suite = context.suites.get(name=existing_suite_name)
+
+# Agregamos expectatiosn a la expectation suite ---------------------------------------- 
+
+suite.add_expectation(expectation_monthly_charges_between)
+suite.add_expectation(expectation_paperless_billing_values)
+suite.add_expectation(expectation_max_total_charges_between)
+
 # Obtener el dataframe como un batch ----------------------------------------
 
 df_contracts = pd.read_csv(
