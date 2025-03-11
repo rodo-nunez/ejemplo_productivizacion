@@ -63,23 +63,23 @@ runtime_expectation_parameters = {
 
 # Definimos una expectation suite ---------------------------------------- 
 
-suite_name = "contact_dataframe_expectation_suite"
-suite = gx.ExpectationSuite(name=suite_name)
+# expectation_suite_name = "contact_dataframe_expectation_suite"
+# expectation_suite = gx.ExpectationSuite(name=expectation_suite_name)
 
-suite = context.suites.add(suite)
+# expectation_suite = context.suites.add(expectation_suite)
 
 # Recuperamos expectation suite ya guardado en data context, en caso de ya haberlo definido antes ---------------------------------------- 
 
-existing_suite_name = (
+existing_expectation_suite_name = (
     "contact_dataframe_expectation_suite"  
 )
-suite = context.suites.get(name=existing_suite_name)
+expectation_suite = context.suites.get(name=existing_expectation_suite_name)
 
 # Agregamos expectatiosn a la expectation suite ---------------------------------------- 
 
-suite.add_expectation(expectation_monthly_charges_between)
-suite.add_expectation(expectation_paperless_billing_values)
-suite.add_expectation(expectation_max_total_charges_between)
+expectation_suite.add_expectation(expectation_monthly_charges_between)
+expectation_suite.add_expectation(expectation_paperless_billing_values)
+expectation_suite.add_expectation(expectation_max_total_charges_between)
 
 # Hacemos algún cambio en una expectation y lo guardamos a la expectation suite ---------------------------------------- 
 
@@ -100,7 +100,6 @@ batch = batch_definition.get_batch(batch_parameters=batch_parameters)
 # Testeamos la expectation ----------------------------------------
 validation_results = batch.validate(expectation_monthly_charges_between)
 print(validation_results)
-
 
 # Testeando runtime expectations ---------------------------------------- 
 
