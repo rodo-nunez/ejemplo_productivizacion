@@ -60,7 +60,6 @@ runtime_expectation_parameters = {
     "expect_total_charges_max_to_be_below": 7000,
     "expect_paperless_billing_values_to_be_in": ("Yes", "No")
 }
-# TODO Aplicar estos parámetros al ejecutar
 
 # Obtener el dataframe como un batch ----------------------------------------
 
