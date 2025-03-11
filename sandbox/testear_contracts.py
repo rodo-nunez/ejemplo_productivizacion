@@ -81,6 +81,8 @@ expectation_suite.add_expectation(expectation_monthly_charges_between)
 expectation_suite.add_expectation(expectation_paperless_billing_values)
 expectation_suite.add_expectation(expectation_max_total_charges_between)
 
+expectation_suite.save()
+
 # Hacemos algún cambio en una expectation y lo guardamos a la expectation suite ---------------------------------------- 
 
 expectation_monthly_charges_between.column = "MonthlyCharges"
@@ -109,9 +111,21 @@ validation_results = batch.validate(
 
 print(validation_results)
 
-# Validación de un batch, usando una validación ya definida ---------------------------------------- 
+# Creamos una definición de validación y la guardamos en el data context ---------------------------------------- 
 
-# TODO: Agregar definición de validación
+validation_definition_name = "contract_dataframe_validation_definition"
+validation_definition = gx.ValidationDefinition(
+    data=batch_definition, suite=expectation_suite, name=validation_definition_name
+)
+
+validation_definition = context.validation_definitions.add(validation_definition) # TODO: no se guarda validacion por problema con expectation suite no guardada
+
+# Leemos validation def en caso de ya haberla definido antes ---------------------------------------- 
+
+validation_definition_name = "contract_dataframe_validation_definition"
+validation_definition = context.validation_definitions.get(validation_definition_name)
+
+# Validación de un batch, usando una validación ya definida ---------------------------------------- 
 
 # # Obtener definición de la validación
 # validation_definition_name = "validation_definition_contract_dataframe"
