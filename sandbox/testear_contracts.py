@@ -68,7 +68,7 @@ df_contracts = pd.read_csv(
     "files/datasets/input/contract.csv"
 )
 
-batch_parameters = {"dataframe": df_contracts}
+batch_parameters = {"dataframe": df_contracts} # TODO: Agregar especificaciones de fecha a un batch
 
 batch = batch_definition.get_batch(batch_parameters=batch_parameters)
 
