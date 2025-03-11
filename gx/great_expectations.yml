@@ -50,7 +50,7 @@ fluent_datasources:
           batch definition:
             id: 96e3d98d-0e15-4afd-a7c7-6d9d4400b4c5
             partitioner:
-          contact_batch:
+          contract_batch:
             id: 68708ccb-6607-4e1b-b71e-62a3975f87fb
             partitioner:
   input_data:
