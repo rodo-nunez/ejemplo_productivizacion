@@ -61,6 +61,13 @@ runtime_expectation_parameters = {
     "expect_paperless_billing_values_to_be_in": ("Yes", "No")
 }
 
+# Definimos una expectation suite ---------------------------------------- 
+
+suite_name = "contact_dataframe_expectation_suite"
+suite = gx.ExpectationSuite(name=suite_name)
+
+suite = context.suites.add(suite)
+
 # Obtener el dataframe como un batch ----------------------------------------
 
 df_contracts = pd.read_csv(
