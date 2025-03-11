@@ -1,0 +1,70 @@
+{
+  "expectations": [
+    {
+      "id": "0061054e-4ca7-4683-bd37-b03e4f685429",
+      "kwargs": {
+        "column": "MonthlyCharges",
+        "max_value": 60.0,
+        "min_value": 0.0
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "bce0e72f-3a2e-48df-b536-3c7da67891d0",
+      "kwargs": {
+        "column": "PaperlessBilling",
+        "value_set": [
+          "Yes",
+          "No"
+        ]
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "51bbbc32-4c23-4cf2-aed3-d5c6882ca698",
+      "kwargs": {
+        "column": "TotalCharges",
+        "max_value": {
+          "$PARAMETER": "expect_total_charges_max_to_be_below"
+        },
+        "min_value": {
+          "$PARAMETER": "expect_total_charges_max_to_be_above"
+        }
+      },
+      "meta": {},
+      "type": "expect_column_max_to_be_between"
+    },
+    {
+      "id": "ad6feb73-dc73-4997-8db9-3bf1e5dd126a",
+      "kwargs": {
+        "column": "PaperlessBilling",
+        "value_set": [
+          "Yes",
+          "No"
+        ]
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "84a3fb1d-2bb2-4617-9041-8827c77c1de2",
+      "kwargs": {
+        "column": "PaperlessBilling",
+        "value_set": [
+          "Yes",
+          "No"
+        ]
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_in_set"
+    }
+  ],
+  "id": "c5298ea5-7063-4c9d-9acb-27b3ac77c67d",
+  "meta": {
+    "great_expectations_version": "1.3.7"
+  },
+  "name": "contract_dataframe_expectation_suite",
+  "notes": null
+}

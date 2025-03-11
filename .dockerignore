@@ -325,3 +325,6 @@ jdbc
 
 # Conections
 hosts
+
+# Great Expectations
+gx
