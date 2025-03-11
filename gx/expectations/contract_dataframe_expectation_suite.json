@@ -47,6 +47,18 @@
       },
       "meta": {},
       "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "84a3fb1d-2bb2-4617-9041-8827c77c1de2",
+      "kwargs": {
+        "column": "PaperlessBilling",
+        "value_set": [
+          "Yes",
+          "No"
+        ]
+      },
+      "meta": {},
+      "type": "expect_column_values_to_be_in_set"
     }
   ],
   "id": "c5298ea5-7063-4c9d-9acb-27b3ac77c67d",
