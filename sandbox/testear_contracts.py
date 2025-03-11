@@ -81,6 +81,11 @@ suite.add_expectation(expectation_monthly_charges_between)
 suite.add_expectation(expectation_paperless_billing_values)
 suite.add_expectation(expectation_max_total_charges_between)
 
+# Hacemos algún cambio en una expectation y lo guardamos a la expectation suite ---------------------------------------- 
+
+expectation_monthly_charges_between.column = "MonthlyCharges"
+expectation_monthly_charges_between.save()
+
 # Obtener el dataframe como un batch ----------------------------------------
 
 df_contracts = pd.read_csv(
