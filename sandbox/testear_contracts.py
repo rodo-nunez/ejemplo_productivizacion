@@ -67,6 +67,7 @@ runtime_expectation_parameters = {
 df_contracts = pd.read_csv(
     "files/datasets/input/contract.csv"
 )
+df_contracts["TotalCharges"] = pd.to_numeric(df_contracts['TotalCharges'],errors="coerce")
 
 batch_parameters = {"dataframe": df_contracts} # TODO: Agregar especificaciones de fecha a un batch
 
