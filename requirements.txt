@@ -82,6 +82,7 @@ parso==0.8.4
 pillow==11.0.0
 platformdirs==4.3.6
 posthog==3.15.1
+python-dotenv
 prometheus_client==0.21.0
 prompt_toolkit==3.0.48
 psutil==6.1.0
