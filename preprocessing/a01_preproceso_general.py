@@ -88,9 +88,8 @@ df_contract['BeginDate'] = pd.to_datetime(
     df_contract['BeginDate'], errors='coerce')
 # Fecha de referencia para contratos sin EndDate
 df_contract['EndDate'] = pd.to_datetime(
-    df_contract['EndDate'], errors='coerce')
-reference_date = pd.to_datetime('2020-02-01') # TODO Pasar a archivo de variables globales
-
+    df_contract['EndDate'], format = "%Y-%m-%d %H:%M:%S", errors='coerce')
+reference_date = pd.to_datetime(params.fecha_de_toma_de_datos)
 
 # Función que calcula duración en meses
 def calculate_duration_months(begin_date, end_date):

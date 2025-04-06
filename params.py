@@ -26,3 +26,5 @@ def get_entrenamiento_sufix(bool_entrtenamiento):
 
 periodo_YYYYMM_por_defecto = "202311"
 
+
+fecha_de_toma_de_datos = '2020-02-01'

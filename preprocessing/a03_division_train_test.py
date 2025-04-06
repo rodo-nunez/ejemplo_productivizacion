@@ -29,7 +29,7 @@ data = pd.read_feather("files/datasets/intermediate/a02_feature_engineering_done
 if (args.modo_prueba == "True") | (args.modo_prueba == True):
     reference_date = data['begin_date'].median()
 else:
-    reference_date = pd.to_datetime('2020-02-01') # TODO Pasar a archivo de variables globales
+    reference_date = pd.to_datetime(params.fecha_de_toma_de_datos)
 
 valid_set = data[data['begin_date'] >= reference_date]
 train_test_set = data[data['begin_date'] < reference_date]
