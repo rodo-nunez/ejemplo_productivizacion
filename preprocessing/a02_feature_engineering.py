@@ -21,9 +21,11 @@ try:
 except argparse.ArgumentTypeError as e:
     print(f"Invalid argument: {e}")
 
+entrenamiento_sufix = params.get_entrenamiento_sufix(eval(args.bool_entrtenamiento))
+
 # Leer input ---------------------------------------- 
 
-data = pd.read_feather("files/datasets/intermediate/a01_datos_preprocesados.feather")
+data = pd.read_feather(f"files/datasets/intermediate/a01_datos_preprocesados{entrenamiento_sufix}.feather")
 
 # Ingenieria de caractaristicas ----------------------------------------
 
@@ -87,4 +89,4 @@ categorical_value(data, ['internet_multilines', 'automatic_pay', 'senior_citizen
 
 # Escritura de output ---------------------------------------- 
 
-data.to_feather("files/datasets/intermediate/a02_feature_engineering_done.feather")
+data.to_feather(f"files/datasets/intermediate/a02_feature_engineering_done{entrenamiento_sufix}.feather")

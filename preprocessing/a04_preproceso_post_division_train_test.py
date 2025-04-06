@@ -25,14 +25,16 @@ try:
 except argparse.ArgumentTypeError as e:
     print(f"Invalid argument: {e}")
 
+entrenamiento_sufix = params.get_entrenamiento_sufix(eval(args.bool_entrtenamiento))
+
 # Leer input ---------------------------------------- 
 
-train_features = pd.read_feather("files/datasets/intermediate/a03_train_features.feather")
-train_target = pd.read_csv("files/datasets/intermediate/a03_train_target.csv")
-valid_features = pd.read_feather("files/datasets/intermediate/a03_valid_features.feather")
-valid_target = pd.read_csv("files/datasets/intermediate/a03_valid_target.csv")
-test_features = pd.read_feather("files/datasets/intermediate/a03_test_features.feather")
-test_target = pd.read_csv("files/datasets/intermediate/a03_test_target.csv")
+train_features = pd.read_feather(f"files/datasets/intermediate/a03_train_features{entrenamiento_sufix}.feather")
+train_target = pd.read_csv(f"files/datasets/intermediate/a03_train_target{entrenamiento_sufix}.csv")
+valid_features = pd.read_feather(f"files/datasets/intermediate/a03_valid_features{entrenamiento_sufix}.feather")
+valid_target = pd.read_csv(f"files/datasets/intermediate/a03_valid_target{entrenamiento_sufix}.csv")
+test_features = pd.read_feather(f"files/datasets/intermediate/a03_test_features{entrenamiento_sufix}.feather")
+test_target = pd.read_csv(f"files/datasets/intermediate/a03_test_target{entrenamiento_sufix}.csv")
 
 # Escalamiento y OHE ---------------------------------------- 
 
@@ -70,10 +72,10 @@ feature_test_transformed_df = pd.DataFrame(
 
 # Escribir outputs ---------------------------------------- 
 
-with open('files/datasets/intermediate/a04_feature_train_transformed_df.pkl', 'wb') as file: 
+with open(f'files/datasets/intermediate/a04_feature_train_transformed_df{entrenamiento_sufix}.pkl', 'wb') as file: 
     pickle.dump(feature_train_transformed_df, file) 
-with open('files/datasets/intermediate/a04_feature_valid_transformed_df.pkl', 'wb') as file: 
+with open(f'files/datasets/intermediate/a04_feature_valid_transformed_df{entrenamiento_sufix}.pkl', 'wb') as file: 
     pickle.dump(feature_valid_transformed_df, file) 
-with open('files/datasets/intermediate/a04_feature_test_transformed_df.pkl', 'wb') as file: 
+with open(f'files/datasets/intermediate/a04_feature_test_transformed_df{entrenamiento_sufix}.pkl', 'wb') as file: 
     pickle.dump(feature_test_transformed_df, file) 
-joblib.dump(preprocessor, 'files/datasets/intermediate/a04_preprocessor.pkl')
+joblib.dump(preprocessor, f'files/datasets/intermediate/a04_preprocessor{entrenamiento_sufix}.pkl')

@@ -41,7 +41,9 @@ try:
     args = parser.parse_args()
 except argparse.ArgumentTypeError as e:
     print(f"Invalid argument: {e}")
-    
+
+entrenamiento_sufix = params.get_entrenamiento_sufix(eval(args.bool_entrtenamiento))
+
 # Lectura de datos ----------------------------------------
 
 df_contract = pd.read_csv('files/datasets/input/contract.csv')
@@ -175,6 +177,6 @@ data[cat_cols] = data[cat_cols].astype(str)
 
 # Guardamos datos ----------------------------------------
 
-data.to_feather("files/datasets/intermediate/a01_datos_preprocesados.feather")
-joblib.dump(cat_cols, 'files/datasets/intermediate/a01_cat_cols.pkl')
-joblib.dump(num_cols, 'files/datasets/intermediate/a01_num_cols.pkl')
+data.to_feather(f"files/datasets/intermediate/a01_datos_preprocesados{entrenamiento_sufix}.feather")
+joblib.dump(cat_cols, f'files/datasets/intermediate/a01_cat_cols{entrenamiento_sufix}.pkl')
+joblib.dump(num_cols, f'files/datasets/intermediate/a01_num_cols{entrenamiento_sufix}.pkl')

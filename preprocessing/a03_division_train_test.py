@@ -20,9 +20,11 @@ try:
 except argparse.ArgumentTypeError as e:
     print(f"Invalid argument: {e}")
 
+entrenamiento_sufix = params.get_entrenamiento_sufix(eval(args.bool_entrtenamiento))
+
 # Leer input ---------------------------------------- 
 
-data = pd.read_feather("files/datasets/intermediate/a02_feature_engineering_done.feather")
+data = pd.read_feather(f"files/datasets/intermediate/a02_feature_engineering_done{entrenamiento_sufix}.feather")
 
 # División entre train y test ---------------------------------------- 
 
@@ -54,14 +56,14 @@ test_ids = test_set[id_columns]
 
 # Escribir outputs ---------------------------------------- 
 
-train_features.to_feather("files/datasets/intermediate/a03_train_features.feather")
-train_target.to_csv("files/datasets/intermediate/a03_train_target.csv", index=False)
-train_ids.to_feather("files/datasets/intermediate/a03_train_ids.feather")
+train_features.to_feather(f"files/datasets/intermediate/a03_train_features{entrenamiento_sufix}.feather")
+train_target.to_csv(f"files/datasets/intermediate/a03_train_target{entrenamiento_sufix}.csv", index=False)
+train_ids.to_feather(f"files/datasets/intermediate/a03_train_ids{entrenamiento_sufix}.feather")
 
-valid_features.to_feather("files/datasets/intermediate/a03_valid_features.feather")
-valid_target.to_csv("files/datasets/intermediate/a03_valid_target.csv", index=False)
-valid_ids.to_feather("files/datasets/intermediate/a03_valid_ids.feather")
+valid_features.to_feather(f"files/datasets/intermediate/a03_valid_features{entrenamiento_sufix}.feather")
+valid_target.to_csv(f"files/datasets/intermediate/a03_valid_target{entrenamiento_sufix}.csv", index=False)
+valid_ids.to_feather(f"files/datasets/intermediate/a03_valid_ids{entrenamiento_sufix}.feather")
 
-test_features.to_feather("files/datasets/intermediate/a03_test_features.feather")
-test_target.to_csv("files/datasets/intermediate/a03_test_target.csv", index=False)
-test_ids.to_feather("files/datasets/intermediate/a03_test_ids.feather")
+test_features.to_feather(f"files/datasets/intermediate/a03_test_features{entrenamiento_sufix}.feather")
+test_target.to_csv(f"files/datasets/intermediate/a03_test_target{entrenamiento_sufix}.csv", index=False)
+test_ids.to_feather(f"files/datasets/intermediate/a03_test_ids{entrenamiento_sufix}.feather")

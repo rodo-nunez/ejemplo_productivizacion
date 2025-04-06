@@ -26,18 +26,20 @@ try:
 except argparse.ArgumentTypeError as e:
     print(f"Invalid argument: {e}")
 
+entrenamiento_sufix = params.get_entrenamiento_sufix(eval(args.bool_entrtenamiento))
+
 # Leer input ---------------------------------------- 
 
-with open('files/datasets/intermediate/a04_feature_train_transformed_df.pkl', 'rb') as file: 
+with open(f'files/datasets/intermediate/a04_feature_train_transformed_df{entrenamiento_sufix}.pkl', 'rb') as file: 
     feature_train_transformed_df = pickle.load(file) 
-with open('files/datasets/intermediate/a04_feature_valid_transformed_df.pkl', 'rb') as file: 
+with open(f'files/datasets/intermediate/a04_feature_valid_transformed_df{entrenamiento_sufix}.pkl', 'rb') as file: 
     feature_valid_transformed_df = pickle.load(file) 
-with open('files/datasets/intermediate/a04_feature_test_transformed_df.pkl', 'rb') as file: 
+with open(f'files/datasets/intermediate/a04_feature_test_transformed_df{entrenamiento_sufix}.pkl', 'rb') as file: 
     feature_test_transformed_df = pickle.load(file) 
 
-train_target = pd.read_csv("files/datasets/intermediate/a03_train_target.csv")
-valid_target = pd.read_csv("files/datasets/intermediate/a03_valid_target.csv")
-test_target = pd.read_csv("files/datasets/intermediate/a03_test_target.csv")
+train_target = pd.read_csv(f"files/datasets/intermediate/a03_train_target{entrenamiento_sufix}.csv")
+valid_target = pd.read_csv(f"files/datasets/intermediate/a03_valid_target{entrenamiento_sufix}.csv")
+test_target = pd.read_csv(f"files/datasets/intermediate/a03_test_target{entrenamiento_sufix}.csv")
 
 preprocessor = joblib.load('files/datasets/intermediate/a04_preprocessor.pkl')
 
