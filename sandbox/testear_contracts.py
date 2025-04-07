@@ -22,9 +22,9 @@ batch_definition_name = "contract_batch"
 
 # Agregamos batch definition al data asset ---------------------------------------- 
 
-# batch_definition = data_asset.add_batch_definition_whole_dataframe(
-#     batch_definition_name
-# )
+batch_definition = data_asset.add_batch_definition_whole_dataframe(
+    batch_definition_name
+)
 
 # Ejemplo de lectura de batch definition que ya estaba creada en el data asset ---------------------------------------- 
 
@@ -85,8 +85,8 @@ expectation_suite.save()
 
 # Hacemos algún cambio en una expectation y lo guardamos a la expectation suite ---------------------------------------- 
 
-expectation_monthly_charges_between.column = "MonthlyCharges"
-expectation_monthly_charges_between.save()
+# expectation_monthly_charges_between.column = "MonthlyCharges"
+# expectation_monthly_charges_between.save()
 
 # Obtener el dataframe como un batch ----------------------------------------
 
@@ -114,23 +114,19 @@ print(validation_results)
 # Creamos una definición de validación y la guardamos en el data context ---------------------------------------- 
 
 validation_definition_name = "contract_dataframe_validation_definition"
-validation_definition = gx.ValidationDefinition(
-    data=batch_definition, suite=expectation_suite, name=validation_definition_name
-)
 
-validation_definition = context.validation_definitions.add(validation_definition) # TODO: no se guarda validacion por problema con expectation suite no guardada
-
-# Leemos validation def en caso de ya haberla definido antes ---------------------------------------- 
-
-validation_definition_name = "contract_dataframe_validation_definition"
-validation_definition = context.validation_definitions.get(validation_definition_name)
+try: # primero intentamos leer la definición si existe
+    validation_definition = context.validation_definitions.get(validation_definition_name)
+except:
+    validation_definition = gx.ValidationDefinition(
+        data=batch_definition, suite=expectation_suite, name=validation_definition_name
+    )
+    # validation_definition.save()
+    context.validation_definitions.add(validation_definition) # No se guardará si ya está definida
 
 # Validación de un batch, usando una validación ya definida ---------------------------------------- 
 
-# # Obtener definición de la validación
-# validation_definition_name = "validation_definition_contract_dataframe"
-# validation_definition = context.validation_definitions.get(validation_definition_name)
-
 # #  Validar el dataframe ejecutando la validación sobre un batch definido
-# validation_results = validation_definition.run(batch_parameters=batch_parameters)
-# print(validation_results)
+validation_results = validation_definition.run(batch_parameters=batch_parameters, 
+                                               expectation_parameters=runtime_expectation_parameters)
+print(validation_results)
