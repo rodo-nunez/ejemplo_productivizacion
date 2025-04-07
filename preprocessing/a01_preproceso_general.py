@@ -2,29 +2,10 @@
 
 import numpy as np
 import argparse
-import matplotlib.pyplot as plt
 
 import pandas as pd
 pd.options.display.max_columns = None
 import joblib
-
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold, GridSearchCV
-from sklearn.metrics import classification_report, roc_curve, roc_auc_score, auc
-
-from imblearn.over_sampling import SMOTE
-
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neural_network import MLPClassifier
-
-from lightgbm import LGBMClassifier
-from xgboost import XGBClassifier
-
-from boruta import BorutaPy
 
 import sys, os
 sys.path.append(os.getcwd()) # Esto es para agregar al path la ruta de ejecución actual y poder importar respecto a la ruta del proyecto, desde donde se debe ejecutar el código
