@@ -26,6 +26,13 @@ except argparse.ArgumentTypeError as e:
 
 # Info ---------------------------------------- 
 
+print(f"---------------------------------- \nVerificación de calidad de datos de entrada \n----------------------------------")
+
+# Verificacion de calidad de datos de input ---------------------------------------- 
+
+logging.info("Ejecutando g01")
+os.system(f"python great_expectations/g01_checkpoint_input_contract.py")
+
 print(f"---------------------------------- \nComenzando proceso de entrenamiento de modelos \n----------------------------------")
 
 # Preproceso ---------------------------------------- 
