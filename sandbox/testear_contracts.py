@@ -1,6 +1,8 @@
 # Librerias y leer contexto ---------------------------------------- 
 import great_expectations as gx
 import pandas as pd
+from dotenv import load_dotenv
+load_dotenv()
 
 context = gx.get_context()
 
@@ -95,7 +97,7 @@ df_contracts = pd.read_csv(
 )
 df_contracts["TotalCharges"] = pd.to_numeric(df_contracts['TotalCharges'],errors="coerce")
 
-batch_parameters = {"dataframe": df_contracts} # TODO: Agregar especificaciones de fecha a un batch
+batch_parameters = {"dataframe": df_contracts} # TODO: Agregar especificaciones de fecha a un batch. https://docs.greatexpectations.io/docs/core/connect_to_data/sql_data/?batch_definition=partitioned#create-a-batch-definition
 
 batch = batch_definition.get_batch(batch_parameters=batch_parameters)
 
@@ -137,14 +139,17 @@ from great_expectations.checkpoint import (
     SlackNotificationAction,
     UpdateDataDocsAction,
 )
+from great_expectations.checkpoint.actions import SlackNotificationAction
+
 
 action_list = [
     # This Action sends a Slack Notification if an Expectation fails.
     SlackNotificationAction(
         name="send_slack_notification_on_failed_expectations",
-        slack_token="${validation_notification_slack_webhook}",
-        slack_channel="${validation_notification_slack_channel}",
-        notify_on="failure",
+        # slack_token="${validation_notification_slack_webhook}",
+        slack_webhook="${validation_notification_slack_webhook}",
+        # slack_channel="${validation_notification_slack_channel}",
+        notify_on="all",
         show_failed_expectations=True,
     ),
     # This Action updates the Data Docs static website with the Validation
@@ -161,21 +166,22 @@ validation_definitions = [
 ]
 
 checkpoint_name = "input_dataframes_checkpoint"
-checkpoint = gx.Checkpoint(
-    name=checkpoint_name,
-    validation_definitions=validation_definitions,
-    actions=action_list,
-    result_format={"result_format": "COMPLETE"}, # result_format permite obtener más o menos detalles. https://docs.greatexpectations.io/docs/core/trigger_actions_based_on_results/choose_a_result_format/
-)
 
-context.checkpoints.add(checkpoint)
-
-# Recuperar checkpoint ya definido ---------------------------------------- 
-
-checkpoint_name = "input_dataframes_checkpoint"
-checkpoint = context.checkpoints.get(checkpoint_name)
+try:
+    checkpoint = context.checkpoints.get(checkpoint_name)
+except:
+    checkpoint = gx.Checkpoint(
+        name=checkpoint_name,
+        validation_definitions=validation_definitions,
+        actions=action_list,
+        result_format={"result_format": "COMPLETE"}, # result_format permite obtener más o menos detalles. https://docs.greatexpectations.io/docs/core/trigger_actions_based_on_results/choose_a_result_format/
+    )
+    context.checkpoints.add(checkpoint)
 
 # Uno puede setear custom actions para mayor flexibilidad. Ver detalles en https://docs.greatexpectations.io/docs/core/trigger_actions_based_on_results/create_a_custom_action?procedure=sample_code
 
+# Ejecusión de un checkpoint ---------------------------------------- 
 
-
+validation_results = checkpoint.run(
+    batch_parameters=batch_parameters, expectation_parameters=runtime_expectation_parameters
+)
