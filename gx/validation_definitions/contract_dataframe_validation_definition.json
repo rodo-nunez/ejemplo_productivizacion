@@ -1,0 +1,22 @@
+{
+  "data": {
+    "asset": {
+      "id": "d0cfc75c-20dc-4c38-9b28-fa90d5dcddf6",
+      "name": "pd dataframe asset contract"
+    },
+    "batch_definition": {
+      "id": "68708ccb-6607-4e1b-b71e-62a3975f87fb",
+      "name": "contract_batch"
+    },
+    "datasource": {
+      "id": "114ec0a9-5fab-43bc-8ef7-fbe0fac4564b",
+      "name": "pandas"
+    }
+  },
+  "id": "61d837aa-0a19-40d6-bc3b-02e6c7bbd81c",
+  "name": "contract_dataframe_validation_definition",
+  "suite": {
+    "id": "c5298ea5-7063-4c9d-9acb-27b3ac77c67d",
+    "name": "contract_dataframe_expectation_suite"
+  }
+}
